@@ -55,6 +55,7 @@ class OpenVpnAndroidService : VpnService() {
 
     private var vpnInterface: ParcelFileDescriptor? = null
     private val serviceScope = CoroutineScope(Dispatchers.Default + Job())
+    private var connectJob: Job? = null
     private var statsJob: Job? = null
     private var connectionStartTime: Long = 0L
 
@@ -76,6 +77,16 @@ class OpenVpnAndroidService : VpnService() {
     }
 
     private fun connectVpn() {
+        connectJob?.cancel()
+        statsJob?.cancel()
+        statsJob = null
+
+        // Cleanly close previous TUN interface if reconnecting to a new server
+        try {
+            vpnInterface?.close()
+        } catch (_: Exception) {}
+        vpnInterface = null
+
         VpnStateRepository.setConnectionState(VpnConnectionState.CONNECTING)
         val server = VpnStateRepository.selectedServer.value
 
@@ -90,13 +101,13 @@ class OpenVpnAndroidService : VpnService() {
             startForeground(NOTIFICATION_ID, initialNotification)
         }
 
-        serviceScope.launch {
+        connectJob = serviceScope.launch {
             try {
                 VpnStateRepository.addLog("[OpenVPN] تهيئة مقبس الشبكة والتحقق من الخادم ${server.ip}:${server.port}", LogLevel.INFO)
-                delay(400)
+                delay(300)
 
                 VpnStateRepository.addLog("[OpenVPN] بدء مصافحة TLS 1.3 وتشفير AES-256-GCM...", LogLevel.INFO)
-                delay(600)
+                delay(400)
 
                 // Build Android native TUN interface
                 val builder = Builder()
@@ -171,9 +182,11 @@ class OpenVpnAndroidService : VpnService() {
     }
 
     private fun disconnectVpn() {
-        VpnStateRepository.setConnectionState(VpnConnectionState.DISCONNECTING)
+        connectJob?.cancel()
+        connectJob = null
         statsJob?.cancel()
         statsJob = null
+        VpnStateRepository.setConnectionState(VpnConnectionState.DISCONNECTING)
 
         serviceScope.launch {
             delay(300)
@@ -229,7 +242,7 @@ class OpenVpnAndroidService : VpnService() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(statusText)
-            .setSmallIcon(R.drawable.img_vpn_shield)
+            .setSmallIcon(R.drawable.ic_vpn_notification)
             .setContentIntent(openAppPendingIntent)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
@@ -253,6 +266,8 @@ class OpenVpnAndroidService : VpnService() {
     }
 
     override fun onDestroy() {
+        connectJob?.cancel()
+        connectJob = null
         statsJob?.cancel()
         statsJob = null
         try {

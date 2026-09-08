@@ -2,7 +2,10 @@ package com.example
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import android.app.Application
+import com.example.ui.VpnViewModel
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -17,5 +20,13 @@ class ExampleRobolectricTest {
     val context = ApplicationProvider.getApplicationContext<Context>()
     val appName = context.getString(R.string.app_name)
     assertEquals("OpenVPN Free", appName)
+  }
+
+  @Test
+  fun `verify vpn consent acceptance`() {
+    val app = ApplicationProvider.getApplicationContext<Application>()
+    val viewModel = VpnViewModel(app)
+    viewModel.acceptConsent()
+    assertTrue(viewModel.hasAcceptedConsent.value)
   }
 }

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">OpenVPN Free</string>
+    <string name="vpn_title">OpenVPN Free</string>
+    <string name="connect">Connexion</string>
+    <string name="disconnect">Déconnexion</string>
+    <string name="connecting">Connexion en cours…</string>
+    <string name="connected">Connecté et Sécurisé</string>
+    <string name="disconnected">Déconnecté</string>
+    <string name="optimal_location">Serveur le plus rapide (Auto)</string>
+    <string name="servers_title">Serveurs VPN</string>
+    <string name="refresh_servers">Actualiser</string>
+    <string name="download_speed">Téléchargement</string>
+    <string name="upload_speed">Envoi</string>
+    <string name="ping">Ping</string>
+    <string name="ip_address">Adresse IP</string>
+    <string name="duration">Durée</string>
+    <string name="notification_channel_name">État de la connexion VPN</string>
+    <string name="notification_channel_desc">Notification permanente affichant la vitesse et l\'état du tunnel</string>
+    <string name="privacy_policy_title">Politique de confidentialité</string>
+    <string name="data_safety_title">Sécurité des données</string>
+    <string name="vpn_disclosure_title">Divulgation du service VPN</string>
+    <string name="app_permissions_title">Autorisations de l\'application</string>
+    <string name="choose_language_title">Choisir la langue</string>
+</resources>

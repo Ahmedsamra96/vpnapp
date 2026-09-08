@@ -1,10 +1,14 @@
 package com.example.ui
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.DefaultServers
 import com.example.data.VpnGateRepository
+import com.example.localization.AppLanguage
+import com.example.localization.AppStrings
+import com.example.localization.getAppStrings
 import com.example.model.LogLevel
 import com.example.model.VpnAppSettings
 import com.example.model.VpnConnectionState
@@ -29,6 +33,41 @@ enum class ServerFilterCategory {
 class VpnViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = VpnGateRepository(application)
+    private val prefs = application.getSharedPreferences("vpn_prefs", Context.MODE_PRIVATE)
+
+    private val _hasAcceptedConsent = MutableStateFlow(
+        prefs.getBoolean("has_accepted_vpn_consent", false)
+    )
+    val hasAcceptedConsent: StateFlow<Boolean> = _hasAcceptedConsent.asStateFlow()
+
+    fun acceptConsent() {
+        prefs.edit().putBoolean("has_accepted_vpn_consent", true).apply()
+        _hasAcceptedConsent.value = true
+        VpnStateRepository.addLog("تم قبول إفصاح خدمة VPN وسياسة الخصوصية", LogLevel.INFO)
+    }
+
+    // Language preference management
+    private val _appLanguage = MutableStateFlow(
+        AppLanguage.fromCode(prefs.getString("app_language", AppLanguage.SYSTEM.code) ?: AppLanguage.SYSTEM.code)
+    )
+    val appLanguage: StateFlow<AppLanguage> = _appLanguage.asStateFlow()
+
+    private val _effectiveLanguage = MutableStateFlow(
+        AppLanguage.resolveEffectiveLanguage(_appLanguage.value)
+    )
+    val effectiveLanguage: StateFlow<AppLanguage> = _effectiveLanguage.asStateFlow()
+
+    private val _appStrings = MutableStateFlow(getAppStrings(_appLanguage.value))
+    val appStrings: StateFlow<AppStrings> = _appStrings.asStateFlow()
+
+    fun setLanguage(language: AppLanguage) {
+        prefs.edit().putString("app_language", language.code).apply()
+        _appLanguage.value = language
+        val resolved = AppLanguage.resolveEffectiveLanguage(language)
+        _effectiveLanguage.value = resolved
+        _appStrings.value = getAppStrings(language)
+        VpnStateRepository.addLog("App language changed to: ${resolved.englishName}", LogLevel.INFO)
+    }
 
     val connectionState: StateFlow<VpnConnectionState> = VpnStateRepository.connectionState
     val selectedServer: StateFlow<VpnServer> = VpnStateRepository.selectedServer
@@ -91,6 +130,12 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
             server
         }
         VpnStateRepository.setSelectedServer(actualServer)
+    }
+
+    fun notifyServerChanged(server: VpnServer) {
+        val targetName = if (server.isOptimal) "أسرع خادم تلقائي" else server.countryAr
+        _userMessage.value = "جاري إعادة الاتصال بخادم $targetName..."
+        VpnStateRepository.addLog("طلب إعادة الاتصال بخادم: $targetName (${server.ip})", LogLevel.INFO)
     }
 
     fun refreshServers(silent: Boolean = false) {

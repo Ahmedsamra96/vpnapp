@@ -21,10 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -43,15 +40,18 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
-import com.example.ui.theme.CyberAmber
-import com.example.ui.theme.CyberBorder
-import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.CyberEmerald
-import com.example.ui.theme.CyberRed
-import com.example.ui.theme.CyberSurface
-import com.example.ui.theme.TextPrimary
-import com.example.ui.theme.TextSecondary
+import com.example.ui.theme.AppBorderLight
+import com.example.ui.theme.AppTextMuted
+import com.example.ui.theme.AppTextPrimary
+import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.VpnConnectedGreen
+import com.example.ui.theme.VpnDisconnectedRed
+import com.example.ui.theme.VpnPrimaryBlue
+import com.example.ui.theme.VpnPrimaryBlueDark
+import com.example.ui.theme.VpnPrimaryBlueLight
+import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun VpnPowerButton(
@@ -59,93 +59,40 @@ fun VpnPowerButton(
     onToggleConnect: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "vpn_pulse")
+    val isConnected = connectionState == VpnConnectionState.CONNECTED
+    val isConnecting = connectionState == VpnConnectionState.CONNECTING
 
-    // Pulse wave 1
-    val pulseScale1 by infiniteTransition.animateFloat(
+    val infiniteTransition = rememberInfiniteTransition(label = "power_pulse")
+
+    // Pulse animation when connected or connecting
+    val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = 1.35f,
+        targetValue = 1.25f,
         animationSpec = infiniteRepeatable(
-            animation = tween(2200, easing = FastOutSlowInEasing),
+            animation = tween(2000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Restart
         ),
-        label = "pulse_scale_1"
+        label = "pulse_scale"
     )
-    val pulseAlpha1 by infiniteTransition.animateFloat(
-        initialValue = 0.5f,
+    val pulseAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.4f,
         targetValue = 0f,
         animationSpec = infiniteRepeatable(
-            animation = tween(2200, easing = FastOutSlowInEasing),
+            animation = tween(2000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Restart
         ),
-        label = "pulse_alpha_1"
+        label = "pulse_alpha"
     )
 
-    // Pulse wave 2 (offset)
-    val pulseScale2 by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.6f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2200, delayMillis = 600, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "pulse_scale_2"
-    )
-    val pulseAlpha2 by infiniteTransition.animateFloat(
-        initialValue = 0.35f,
-        targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2200, delayMillis = 600, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "pulse_alpha_2"
-    )
-
-    // Continuous rotation for connecting spinner ring
-    val ringRotation by infiniteTransition.animateFloat(
+    // Spinner rotation while connecting
+    val spinRotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1400, easing = LinearEasing),
+            animation = tween(1200, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
-        label = "ring_rotation"
-    )
-
-    // Colors according to state
-    val mainColor by animateColorAsState(
-        targetValue = when (connectionState) {
-            VpnConnectionState.CONNECTED -> CyberEmerald
-            VpnConnectionState.CONNECTING -> CyberAmber
-            VpnConnectionState.DISCONNECTING -> CyberRed
-            VpnConnectionState.DISCONNECTED -> CyberCyan
-        },
-        label = "button_color"
-    )
-
-    val buttonBackground = Brush.radialGradient(
-        colors = when (connectionState) {
-            VpnConnectionState.CONNECTED -> listOf(
-                Color(0xFF0F3A2C),
-                Color(0xFF071C17),
-                CyberSurface
-            )
-            VpnConnectionState.CONNECTING -> listOf(
-                Color(0xFF382B0E),
-                Color(0xFF201807),
-                CyberSurface
-            )
-            VpnConnectionState.DISCONNECTING -> listOf(
-                Color(0xFF3A1212),
-                Color(0xFF200909),
-                CyberSurface
-            )
-            VpnConnectionState.DISCONNECTED -> listOf(
-                Color(0xFF13233E),
-                Color(0xFF0D1728),
-                CyberSurface
-            )
-        }
+        label = "spin_rotation"
     )
 
     Column(
@@ -154,128 +101,149 @@ fun VpnPowerButton(
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.size(240.dp)
+            modifier = Modifier.size(220.dp)
         ) {
-            // Pulse rings for active states
-            if (connectionState == VpnConnectionState.CONNECTED || connectionState == VpnConnectionState.CONNECTING) {
+            // Pulse wave for connected state
+            if (isConnected || isConnecting) {
                 Canvas(
                     modifier = Modifier
-                        .size(160.dp)
-                        .scale(pulseScale1)
+                        .size(175.dp)
+                        .scale(pulseScale)
                 ) {
                     drawCircle(
-                        color = mainColor.copy(alpha = pulseAlpha1),
-                        radius = size.minDimension / 2
-                    )
-                }
-
-                Canvas(
-                    modifier = Modifier
-                        .size(160.dp)
-                        .scale(pulseScale2)
-                ) {
-                    drawCircle(
-                        color = mainColor.copy(alpha = pulseAlpha2),
+                        color = (if (isConnected) VpnPrimaryBlue else VpnPrimaryBlueLight).copy(alpha = pulseAlpha),
                         radius = size.minDimension / 2
                     )
                 }
             }
 
-            // Outer decorative circular border with cyber dashes
-            Canvas(modifier = Modifier.size(190.dp)) {
+            // Outer Concentric Decorative Ring
+            Canvas(modifier = Modifier.size(195.dp)) {
                 drawCircle(
-                    color = CyberBorder.copy(alpha = 0.6f),
-                    radius = (size.minDimension / 2),
-                    style = Stroke(width = 1.5.dp.toPx())
+                    color = if (isConnected) Color(0xFFDBEAFE) else Color(0xFFEDF2F7),
+                    radius = size.minDimension / 2
                 )
             }
 
-            // Connecting rotating sweep
-            if (connectionState == VpnConnectionState.CONNECTING) {
-                Canvas(modifier = Modifier.size(190.dp)) {
+            // Middle Concentric Ring
+            Canvas(modifier = Modifier.size(165.dp)) {
+                drawCircle(
+                    color = if (isConnected) Color(0xFFBFDBFE) else Color(0xFFF8FAFC),
+                    radius = size.minDimension / 2
+                )
+            }
+
+            // Connecting progress arc
+            if (isConnecting) {
+                Canvas(modifier = Modifier.size(165.dp)) {
                     drawArc(
-                        color = CyberAmber,
-                        startAngle = ringRotation,
-                        sweepAngle = 90f,
+                        brush = Brush.sweepGradient(
+                            listOf(
+                                VpnPrimaryBlue.copy(alpha = 0.1f),
+                                VpnPrimaryBlue
+                            )
+                        ),
+                        startAngle = spinRotation,
+                        sweepAngle = 120f,
                         useCenter = false,
-                        style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
+                        style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
                     )
                 }
             }
 
-            // Main Clickable Circular Button
+            // Main Core Power Button
+            val buttonBrush = if (isConnected) {
+                Brush.verticalGradient(
+                    colors = listOf(
+                        VpnPrimaryBlueLight,
+                        VpnPrimaryBlue,
+                        VpnPrimaryBlueDark
+                    )
+                )
+            } else if (isConnecting) {
+                Brush.verticalGradient(
+                    colors = listOf(
+                        VpnPrimaryBlueLight,
+                        VpnPrimaryBlue
+                    )
+                )
+            } else {
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color.White,
+                        Color(0xFFF8FAFC)
+                    )
+                )
+            }
+
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(136.dp)
                     .testTag("vpn_power_button")
                     .shadow(
-                        elevation = if (connectionState == VpnConnectionState.CONNECTED) 18.dp else 8.dp,
+                        elevation = if (isConnected) 16.dp else 6.dp,
                         shape = CircleShape,
-                        spotColor = mainColor
+                        spotColor = if (isConnected) VpnPrimaryBlue else Color(0x22000000)
                     )
                     .clip(CircleShape)
-                    .background(buttonBackground)
+                    .background(buttonBrush)
                     .border(
-                        width = 3.dp,
-                        color = mainColor.copy(alpha = if (connectionState == VpnConnectionState.CONNECTED) 0.9f else 0.5f),
+                        width = if (isConnected) 0.dp else 1.5.dp,
+                        color = if (isConnected) Color.Transparent else AppBorderLight,
                         shape = CircleShape
                     )
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = ripple(bounded = true, color = mainColor),
+                        indication = ripple(bounded = true, color = if (isConnected) Color.White else VpnPrimaryBlue),
                         onClick = onToggleConnect
                     )
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        imageVector = when (connectionState) {
-                            VpnConnectionState.CONNECTED -> Icons.Default.Shield
-                            VpnConnectionState.CONNECTING -> Icons.Default.VpnKey
-                            else -> Icons.Default.PowerSettingsNew
-                        },
-                        contentDescription = "زر اتصال VPN",
-                        tint = mainColor,
-                        modifier = Modifier.size(54.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = when (connectionState) {
-                            VpnConnectionState.CONNECTED -> "متصل"
-                            VpnConnectionState.CONNECTING -> "اتصال…"
-                            VpnConnectionState.DISCONNECTING -> "قطع…"
-                            VpnConnectionState.DISCONNECTED -> "اتصال"
-                        },
-                        color = TextPrimary,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.PowerSettingsNew,
+                    contentDescription = "VPN Power Button",
+                    tint = if (isConnected || isConnecting) Color.White else Color(0xFF475569),
+                    modifier = Modifier.size(54.dp)
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
-        // State subtitle
+        val strings = LocalAppStrings.current
+
+        // Status Title
         Text(
             text = when (connectionState) {
-                VpnConnectionState.CONNECTED -> "النفق مشفر ومحمي بالكامل 🔒"
-                VpnConnectionState.CONNECTING -> "جاري إنشاء نفق OpenVPN الآمن…"
-                VpnConnectionState.DISCONNECTING -> "جاري إنهاء الاتصال بأمان…"
-                VpnConnectionState.DISCONNECTED -> "انقر فوق الزر لتأمين اتصالك فوراً"
+                VpnConnectionState.CONNECTED -> strings.statusConnected
+                VpnConnectionState.CONNECTING -> strings.statusConnecting
+                VpnConnectionState.DISCONNECTING -> strings.tapToCancel
+                VpnConnectionState.DISCONNECTED -> strings.statusDisconnected
             },
             color = when (connectionState) {
-                VpnConnectionState.CONNECTED -> CyberEmerald
-                VpnConnectionState.CONNECTING -> CyberAmber
-                VpnConnectionState.DISCONNECTING -> CyberRed
-                VpnConnectionState.DISCONNECTED -> TextSecondary
+                VpnConnectionState.CONNECTED -> VpnConnectedGreen
+                VpnConnectionState.CONNECTING -> VpnPrimaryBlue
+                VpnConnectionState.DISCONNECTING -> VpnDisconnectedRed
+                VpnConnectionState.DISCONNECTED -> AppTextPrimary
             },
+            fontSize = 21.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.testTag("connection_state_label")
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        // Status Subtitle
+        Text(
+            text = when (connectionState) {
+                VpnConnectionState.CONNECTED -> strings.connectionProtected
+                VpnConnectionState.CONNECTING -> strings.statusConnecting
+                VpnConnectionState.DISCONNECTING -> strings.tapToCancel
+                VpnConnectionState.DISCONNECTED -> strings.notProtected
+            },
+            color = AppTextSecondary,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Normal
         )
     }
 }

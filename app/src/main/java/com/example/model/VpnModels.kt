@@ -63,6 +63,10 @@ data class VpnTrafficStats(
             else -> "$totalBytes B"
         }
     }
+
+    fun formattedDuration(): String = formatDuration()
+    fun formattedDownloaded(): String = formatTotalBytes(totalBytesDown)
+    fun formattedUploaded(): String = formatTotalBytes(totalBytesUp)
 }
 
 data class VpnLogEntry(
