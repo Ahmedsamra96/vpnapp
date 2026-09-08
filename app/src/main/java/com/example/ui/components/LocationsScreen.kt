@@ -45,6 +45,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.localization.AppLanguage
+import com.example.localization.LocalAppLanguage
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnServer
 import com.example.ui.VpnViewModel
@@ -70,6 +72,7 @@ fun LocationsScreen(
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isLoading by viewModel.isLoadingServers.collectAsState()
     val strings = LocalAppStrings.current
+    val isArabic = LocalAppLanguage.current == AppLanguage.ARABIC
 
     Column(
         modifier = modifier
@@ -222,7 +225,7 @@ fun LocationsScreen(
                         Column {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
-                                    text = server.country,
+                                    text = server.getDisplayName(isArabic, strings.optimalServer),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = AppTextPrimary
@@ -231,14 +234,14 @@ fun LocationsScreen(
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Icon(
                                         imageVector = Icons.Default.Check,
-                                        contentDescription = "Selected",
+                                        contentDescription = strings.selectedServerAction,
                                         tint = VpnPrimaryBlue,
                                         modifier = Modifier.size(16.dp)
                                     )
                                 }
                             }
                             Text(
-                                text = if (server.isOptimal) strings.optimalServer else "${server.city} (${server.ip})",
+                                text = if (server.isOptimal) strings.freeAndFastBadge else "${server.city} (${server.ip})",
                                 fontSize = 12.sp,
                                 color = AppTextSecondary
                             )
@@ -260,7 +263,7 @@ fun LocationsScreen(
 
                         Icon(
                             imageVector = Icons.Default.NetworkCell,
-                            contentDescription = "Signal",
+                            contentDescription = null,
                             tint = when {
                                 server.pingMs < 45 -> VpnConnectedGreen
                                 server.pingMs < 90 -> VpnAmber
@@ -277,7 +280,7 @@ fun LocationsScreen(
                         ) {
                             Icon(
                                 imageVector = if (server.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                                contentDescription = "Favorite",
+                                contentDescription = strings.favoriteServerAction,
                                 tint = if (server.isFavorite) VpnAmber else AppTextMuted,
                                 modifier = Modifier.size(18.dp)
                             )

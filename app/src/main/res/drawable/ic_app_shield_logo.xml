@@ -1,0 +1,189 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Soft squircle background glow -->
+    <path
+        android:pathData="M24,4 h60 a20,20 0 0 1 20,20 v60 a20,20 0 0 1 -20,20 h-60 a20,20 0 0 1 -20,-20 v-60 a20,20 0 0 1 20,-20 z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="4"
+                android:endX="54"
+                android:endY="104"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FFF8FCFF" />
+                <item android:offset="1.0" android:color="#FFE3F2FD" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Shield outer shadow / back rim -->
+    <path
+        android:pathData="M54,18 C68,22 81,28 85,32 C87,50 82,75 54,88 C26,75 21,50 23,32 C27,28 40,22 54,18 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="18"
+                android:endX="54"
+                android:endY="88"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FF0284C7" />
+                <item android:offset="1.0" android:color="#FF0369A1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Shield main body with 3D vibrant blue gradient -->
+    <path
+        android:pathData="M54,20 C66,24 78,30 82,34 C84,49 79,72 54,85 C29,72 24,49 26,34 C30,30 42,24 54,20 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="30"
+                android:startY="20"
+                android:endX="78"
+                android:endY="85"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FF38BDF8" />
+                <item android:offset="0.3" android:color="#FF0284C7" />
+                <item android:offset="0.8" android:color="#FF0066FF" />
+                <item android:offset="1.0" android:color="#FF0052CC" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Shield interior facet / cavity (darker blue recess) -->
+    <path
+        android:pathData="M54,24 C64,28 73,33 76,38 C77,52 71,68 54,78 C37,68 31,52 32,38 C35,33 44,28 54,24 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="24"
+                android:endX="54"
+                android:endY="78"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FF0284C7" />
+                <item android:offset="0.5" android:color="#FF0369A1" />
+                <item android:offset="1.0" android:color="#FF075985" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Glowing 3D Earth globe sphere -->
+    <path
+        android:pathData="M54,30 A19,19 0 1,0 54,68 A19,19 0 1,0 54,30 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="42"
+                android:startY="32"
+                android:endX="66"
+                android:endY="66"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FF7DD3FC" />
+                <item android:offset="0.4" android:color="#FF38BDF8" />
+                <item android:offset="0.8" android:color="#FF0284C7" />
+                <item android:offset="1.0" android:color="#FF0369A1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Globe Continents (Americas & Eurasia/Africa silhouettes) -->
+    <!-- North & South America -->
+    <path
+        android:pathData="M44,36 C47,37 49,39 47,42 C45,44 42,43 40,41 C39,39 41,36 44,36 Z"
+        android:fillColor="#FFBAE6FD" />
+    <path
+        android:pathData="M42,43 C44,44 45,47 43,50 C41,53 39,52 38,48 C37,45 39,43 42,43 Z"
+        android:fillColor="#FFBAE6FD" />
+    <path
+        android:pathData="M42,51 C45,52 47,56 45,60 C43,62 41,61 40,58 C39,55 40,52 42,51 Z"
+        android:fillColor="#FFBAE6FD" />
+
+    <!-- Europe / Africa / Asia -->
+    <path
+        android:pathData="M56,36 C60,36 63,38 61,41 C59,42 56,40 55,38 C54,36 55,36 56,36 Z"
+        android:fillColor="#FFBAE6FD" />
+    <path
+        android:pathData="M54,42 C58,41 62,43 63,47 C62,51 59,54 56,53 C53,51 52,45 54,42 Z"
+        android:fillColor="#FFBAE6FD" />
+    <path
+        android:pathData="M55,54 C58,55 61,58 60,62 C58,65 56,64 55,61 C54,58 54,55 55,54 Z"
+        android:fillColor="#FFBAE6FD" />
+
+    <!-- Globe top-left specular highlight -->
+    <path
+        android:pathData="M44,33 A13,13 0 0,1 59,38 A16,16 0 0,0 42,47 A13,13 0 0,1 44,33 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="44"
+                android:startY="33"
+                android:endX="54"
+                android:endY="45"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#CCFFFFFF" />
+                <item android:offset="1.0" android:color="#00FFFFFF" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Dynamic 3D White/Silver Ribbon Swoosh -->
+    <!-- Under-swoosh shadow on shield -->
+    <path
+        android:pathData="M40,78 C42,66 52,56 66,48 C74,44 80,39 84,33 C84,37 77,46 68,52 C55,60 45,70 42,80 Z"
+        android:fillColor="#33003366" />
+
+    <!-- Ribbon main glossy white/cyan surface -->
+    <path
+        android:pathData="M54,85 C46,80 39,68 44,57 C48,47 57,41 68,36 C74,34 81,32 84,30 C86,32 85,35 81,39 C73,47 62,55 52,65 C45,72 45,79 54,85 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="40"
+                android:startY="85"
+                android:endX="85"
+                android:endY="30"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FFFFFFFF" />
+                <item android:offset="0.4" android:color="#FFF0F9FF" />
+                <item android:offset="0.8" android:color="#FFE0F2FE" />
+                <item android:offset="1.0" android:color="#FFBAE6FD" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Ribbon inner fold highlight for 3D twist -->
+    <path
+        android:pathData="M54,85 C49,81 44,74 46,67 C48,59 56,52 66,45 C73,40 80,36 84,30 C83,32 77,37 69,43 C59,50 51,58 48,66 C46,73 49,79 54,85 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="46"
+                android:startY="85"
+                android:endX="84"
+                android:endY="30"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FFFFFFFF" />
+                <item android:offset="0.5" android:color="#FFCCEEFF" />
+                <item android:offset="1.0" android:color="#00FFFFFF" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Outer shield right rim light -->
+    <path
+        android:pathData="M54,20 C66,24 78,30 82,34 C84,49 79,72 54,85 C55,83 76,68 78,45 C77,36 67,26 54,20 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="20"
+                android:endX="84"
+                android:endY="60"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#80E0F2FE" />
+                <item android:offset="1.0" android:color="#00FFFFFF" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+</vector>

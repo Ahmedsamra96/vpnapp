@@ -37,23 +37,23 @@ object VpnStateRepository {
 
     fun setSelectedServer(server: VpnServer) {
         _selectedServer.value = server
-        addLog("تم اختيار الخادم: ${server.countryAr} (${server.ip})", LogLevel.INFO)
+        addLog("Server selected: ${server.country} (${server.ip})", LogLevel.INFO)
     }
 
     fun setConnectionState(state: VpnConnectionState) {
         _connectionState.value = state
         when (state) {
             VpnConnectionState.CONNECTING -> {
-                addLog("جاري الاتصال بنفق OpenVPN المشفر...", LogLevel.INFO)
+                addLog("Connecting to encrypted OpenVPN tunnel...", LogLevel.INFO)
             }
             VpnConnectionState.CONNECTED -> {
-                addLog("تم تأمين الاتصال بنجاح عبر بروتوكول OpenVPN", LogLevel.SUCCESS)
+                addLog("Connection secured successfully via OpenVPN protocol", LogLevel.SUCCESS)
             }
             VpnConnectionState.DISCONNECTING -> {
-                addLog("جاري إنهاء جلسة النفق...", LogLevel.WARNING)
+                addLog("Terminating tunnel session...", LogLevel.WARNING)
             }
             VpnConnectionState.DISCONNECTED -> {
-                addLog("تم قطع الاتصال بالـ VPN", LogLevel.INFO)
+                addLog("VPN disconnected", LogLevel.INFO)
                 _trafficStats.value = VpnTrafficStats()
             }
         }
@@ -65,7 +65,7 @@ object VpnStateRepository {
 
     fun updateSettings(newSettings: VpnAppSettings) {
         _settings.value = newSettings
-        addLog("تم تحديث إعدادات الأمان", LogLevel.INFO)
+        addLog("Security settings updated", LogLevel.INFO)
     }
 
     fun addLog(message: String, level: LogLevel = LogLevel.INFO) {

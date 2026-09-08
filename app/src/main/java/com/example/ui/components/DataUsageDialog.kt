@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.NetworkCheck
-import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -50,11 +49,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.localization.LocalAppStrings
 import com.example.ui.theme.AppBgLight
 import com.example.ui.theme.AppBorderLight
 import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
-import com.example.ui.theme.AppTextMuted
 import com.example.ui.theme.AppTextPrimary
 import com.example.ui.theme.AppTextSecondary
 import com.example.ui.theme.VpnAmber
@@ -68,6 +66,8 @@ import com.example.ui.theme.VpnPrimaryBlueSoft
 fun DataUsageDialog(
     onDismiss: () -> Unit
 ) {
+    val strings = LocalAppStrings.current
+
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -110,13 +110,13 @@ fun DataUsageDialog(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(
-                                text = "أمان واستخدام البيانات",
+                                text = strings.dataSafetyTitle,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = AppTextPrimary
                             )
                             Text(
-                                text = "Google Play Data Safety Standards",
+                                text = strings.dataSafetySubtitle,
                                 fontSize = 12.sp,
                                 color = AppTextSecondary
                             )
@@ -129,7 +129,7 @@ fun DataUsageDialog(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = strings.closeBtn,
                             tint = AppTextSecondary
                         )
                     }
@@ -146,7 +146,7 @@ fun DataUsageDialog(
                 ) {
                     // Google Play Data Safety Summary Grid
                     Text(
-                        text = "ملخص إقرار أمان البيانات (Google Play Data Safety)",
+                        text = strings.dataSafetySummaryTitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = AppTextPrimary
@@ -160,16 +160,16 @@ fun DataUsageDialog(
                         DataSafetySummaryCard(
                             modifier = Modifier.weight(1f),
                             icon = Icons.Default.Block,
-                            title = "جمع البيانات",
-                            value = "لا يوجد (0%)",
+                            title = strings.dataCollectionTitle,
+                            value = strings.dataCollectionValue,
                             color = VpnConnectedGreen,
                             bgColor = VpnConnectedGreenSoft
                         )
                         DataSafetySummaryCard(
                             modifier = Modifier.weight(1f),
                             icon = Icons.Default.Share,
-                            title = "مشاركة البيانات",
-                            value = "لا تشارك (0%)",
+                            title = strings.dataSharingTitle,
+                            value = strings.dataSharingValue,
                             color = VpnConnectedGreen,
                             bgColor = VpnConnectedGreenSoft
                         )
@@ -184,16 +184,16 @@ fun DataUsageDialog(
                         DataSafetySummaryCard(
                             modifier = Modifier.weight(1f),
                             icon = Icons.Default.Lock,
-                            title = "التشفير أثناء النقل",
-                            value = "مشفّر بالكامل",
+                            title = strings.dataTransitTitle,
+                            value = strings.dataTransitValue,
                             color = VpnPrimaryBlue,
                             bgColor = VpnPrimaryBlueSoft
                         )
                         DataSafetySummaryCard(
                             modifier = Modifier.weight(1f),
                             icon = Icons.Default.DeleteSweep,
-                            title = "حذف البيانات",
-                            value = "لا توجد بيانات مخزنة",
+                            title = strings.dataDeletionTitle,
+                            value = strings.dataDeletionValue,
                             color = VpnAmber,
                             bgColor = VpnAmber.copy(alpha = 0.12f)
                         )
@@ -203,7 +203,7 @@ fun DataUsageDialog(
 
                     // Transparent Category Breakdown
                     Text(
-                        text = "تفصيل فئات البيانات وفق تصنيفات Google Play",
+                        text = strings.dataCategoriesTitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = AppTextPrimary
@@ -219,36 +219,36 @@ fun DataUsageDialog(
                     ) {
                         Column(modifier = Modifier.padding(14.dp)) {
                             DataCategoryRow(
-                                title = "الموقع الجغرافي الدقيق (Precise Location)",
-                                status = "غير مستخدم إطلاقاً",
+                                title = strings.catLocationTitle,
+                                status = strings.catLocationStatus,
                                 collected = false
                             )
                             HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
 
                             DataCategoryRow(
-                                title = "المعلومات الشخصية (الاسم، البريد، الهاتف)",
-                                status = "غير مطلوبة ولا يتم جمعها",
+                                title = strings.catPersonalTitle,
+                                status = strings.catPersonalStatus,
                                 collected = false
                             )
                             HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
 
                             DataCategoryRow(
-                                title = "سجل التصفح وسجل الويب (Web Browsing)",
-                                status = "صفر سجلات (Zero Logs)",
+                                title = strings.catBrowsingTitle,
+                                status = strings.catBrowsingStatus,
                                 collected = false
                             )
                             HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
 
                             DataCategoryRow(
-                                title = "معرفات الجهاز (Device ID / Advertising ID)",
-                                status = "لا يتم قراءتها أو استخدامها للتتبع",
+                                title = strings.catDeviceTitle,
+                                status = strings.catDeviceStatus,
                                 collected = false
                             )
                             HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
 
                             DataCategoryRow(
-                                title = "حركة البيانات اللحظية (Live Throughput)",
-                                status = "في ذاكرة RAM فقط أثناء الاتصال",
+                                title = strings.catThroughputTitle,
+                                status = strings.catThroughputStatus,
                                 collected = false,
                                 isInfo = true
                             )
@@ -259,7 +259,7 @@ fun DataUsageDialog(
 
                     // Bandwidth & Traffic Overhead Guide
                     Text(
-                        text = "إرشادات استهلاك البيانات والإنترنت",
+                        text = strings.dataImpactTitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = AppTextPrimary
@@ -291,7 +291,7 @@ fun DataUsageDialog(
                                 }
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Text(
-                                    text = "كيف يؤثر الـ VPN على باقة الإنترنت؟",
+                                    text = strings.dataImpactTitle,
                                     fontSize = 13.5.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = AppTextPrimary
@@ -299,9 +299,7 @@ fun DataUsageDialog(
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "• تشفير OpenVPN يضيف ترويسة أمان صغيرة (حوالي 4-7% حجم إضافي) لكل حزمة بيانات مشفرة، وهو المعيار العالمي لضمان الأمان.\n" +
-                                        "• لا يقوم التطبيق بتنزيل أي ملفات في الخلفية بدون علمك.\n" +
-                                        "• يمكنك مراقبة إجمالي البايتات المرسلة والمستقبلة بدقة مباشرة من لوحة التحكم الرئيسية.",
+                                text = strings.dataImpactContent,
                                 fontSize = 12.sp,
                                 color = AppTextSecondary,
                                 lineHeight = 18.sp
@@ -330,7 +328,7 @@ fun DataUsageDialog(
                             .height(48.dp)
                     ) {
                         Text(
-                            text = "إغلاق",
+                            text = strings.closeBtn,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White

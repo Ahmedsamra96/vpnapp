@@ -72,29 +72,12 @@ fun WelcomeOnboardingDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(26.dp)
             ) {
-                // Shield Hero Icon with Checkmark
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(86.dp)
-                        .clip(CircleShape)
-                        .background(VpnPrimaryBlueSoft)
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
-                            .background(VpnPrimaryBlue)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Shield,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(34.dp)
-                        )
-                    }
-                }
+                // Shield Hero Brand Icon
+                AppBrandLogo(
+                    size = 90.dp,
+                    showContainer = true,
+                    showGlow = true
+                )
 
                 Spacer(modifier = Modifier.height(18.dp))
 

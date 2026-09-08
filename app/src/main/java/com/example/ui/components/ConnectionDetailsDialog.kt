@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.localization.AppLanguage
+import com.example.localization.LocalAppLanguage
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
 import com.example.model.VpnServer
@@ -61,6 +63,7 @@ fun ConnectionDetailsDialog(
     onDismiss: () -> Unit
 ) {
     val strings = LocalAppStrings.current
+    val isArabic = LocalAppLanguage.current == AppLanguage.ARABIC
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -101,7 +104,7 @@ fun ConnectionDetailsDialog(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = strings.closeBtn,
                             tint = AppTextSecondary,
                             modifier = Modifier.size(18.dp)
                         )
@@ -141,7 +144,7 @@ fun ConnectionDetailsDialog(
 
                             Column {
                                 Text(
-                                    text = server.country,
+                                    text = server.getDisplayName(isArabic, strings.optimalServer),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = AppTextPrimary
@@ -216,32 +219,23 @@ fun ConnectionDetailsDialog(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(VpnPrimaryBlue)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Shield,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(22.dp)
-                            )
-                        }
+                        AppBrandLogo(
+                            size = 40.dp,
+                            showContainer = true,
+                            showGlow = false
+                        )
 
                         Spacer(modifier = Modifier.width(14.dp))
 
                         Column {
                             Text(
-                                text = "A safer, more private internet",
+                                text = strings.secureFeatureTitle,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = VpnPrimaryBlue
                             )
                             Text(
-                                text = "No registration. Free access. Just connect and browse securely.",
+                                text = strings.secureFeatureSubtitle,
                                 fontSize = 12.sp,
                                 color = AppTextSecondary
                             )
@@ -252,7 +246,7 @@ fun ConnectionDetailsDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Made for a more open internet 💙",
+                    text = strings.privacyVerifiedBadgeSubtitle,
                     fontSize = 12.sp,
                     color = AppTextMuted,
                     textAlign = TextAlign.Center,

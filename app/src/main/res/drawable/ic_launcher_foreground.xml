@@ -3,7 +3,6 @@
     <item
         android:width="72dp"
         android:height="72dp"
-        android:drawable="@drawable/fast_vpn_shield_icon_1788893573974"
+        android:drawable="@drawable/ic_app_shield_logo"
         android:gravity="center" />
 </layer-list>
-

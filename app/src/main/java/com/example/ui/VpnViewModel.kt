@@ -43,7 +43,7 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
     fun acceptConsent() {
         prefs.edit().putBoolean("has_accepted_vpn_consent", true).apply()
         _hasAcceptedConsent.value = true
-        VpnStateRepository.addLog("تم قبول إفصاح خدمة VPN وسياسة الخصوصية", LogLevel.INFO)
+        VpnStateRepository.addLog("VPN Service Disclosure and Privacy Policy accepted", LogLevel.INFO)
     }
 
     // Language preference management
@@ -133,27 +133,29 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun notifyServerChanged(server: VpnServer) {
-        val targetName = if (server.isOptimal) "أسرع خادم تلقائي" else server.countryAr
-        _userMessage.value = "جاري إعادة الاتصال بخادم $targetName..."
-        VpnStateRepository.addLog("طلب إعادة الاتصال بخادم: $targetName (${server.ip})", LogLevel.INFO)
+        val strings = _appStrings.value
+        val isArabic = _effectiveLanguage.value == AppLanguage.ARABIC
+        val targetName = server.getDisplayName(isArabic, strings.optimalServer)
+        _userMessage.value = strings.formatReconnecting(targetName)
+        VpnStateRepository.addLog("Reconnecting to server: $targetName (${server.ip})", LogLevel.INFO)
     }
 
     fun refreshServers(silent: Boolean = false) {
         viewModelScope.launch {
             if (!silent) _isLoadingServers.value = true
             try {
-                VpnStateRepository.addLog("جاري فحص وتحديث قائمة خوادم OpenVPN المجانية...", LogLevel.INFO)
+                VpnStateRepository.addLog("Scanning and refreshing OpenVPN servers...", LogLevel.INFO)
                 val liveServers = repository.fetchServers()
                 if (liveServers.isNotEmpty()) {
                     _servers.value = liveServers
                     if (!silent) {
-                        _userMessage.value = "تم تحديث ${liveServers.size} خادم بنجاح!"
-                        VpnStateRepository.addLog("تم جلب ${liveServers.size} خادم OpenVPN مجاني نشط", LogLevel.SUCCESS)
+                        _userMessage.value = _appStrings.value.formatServersRefreshed(liveServers.size)
+                        VpnStateRepository.addLog("Retrieved ${liveServers.size} active OpenVPN servers", LogLevel.SUCCESS)
                     }
                 }
             } catch (e: Exception) {
                 if (!silent) {
-                    _userMessage.value = "تعذر تحديث الخوادم مباشرة، تم استخدام الخوادم المدمجة السريعة"
+                    _userMessage.value = _appStrings.value.serversRefreshFailed
                 }
             } finally {
                 _isLoadingServers.value = false
@@ -197,13 +199,16 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
 
     fun importCustomOvpnConfig(name: String, configContent: String) {
         if (configContent.isBlank()) return
+        val strings = _appStrings.value
+        val isArabic = _effectiveLanguage.value == AppLanguage.ARABIC
+        val defaultName = if (isArabic) "خادم مخصص" else "Custom Server"
         val customServer = VpnServer(
             id = "custom_${System.currentTimeMillis()}",
-            country = name.ifBlank { "خادم مخصص" },
+            country = name.ifBlank { defaultName },
             countryAr = name.ifBlank { "خادم مخصص" },
             countryCode = "CUSTOM",
             city = "OpenVPN Config",
-            ip = "خادم مخصص",
+            ip = "Custom",
             pingMs = 25,
             speedMbps = 100.0,
             protocol = if (configContent.contains("proto tcp", ignoreCase = true)) "TCP" else "UDP",
@@ -215,7 +220,7 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
         current.add(1, customServer)
         _servers.value = current
         selectServer(customServer)
-        _userMessage.value = "تمت إضافة وتفعيل ملف التكوين المخصص بنجاح"
-        VpnStateRepository.addLog("تم استيراد ملف تكوين OpenVPN بنجاح ($name)", LogLevel.SUCCESS)
+        _userMessage.value = strings.customConfigImported
+        VpnStateRepository.addLog("Imported custom OpenVPN config successfully ($name)", LogLevel.SUCCESS)
     }
 }

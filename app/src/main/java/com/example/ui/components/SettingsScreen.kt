@@ -112,6 +112,46 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // App Brand Header Card
+        Card(
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(elevation = 3.dp, shape = RoundedCornerShape(20.dp), spotColor = Color(0x0C000000))
+                .border(1.dp, AppBorderLight, RoundedCornerShape(20.dp))
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                AppBrandLogo(
+                    size = 52.dp,
+                    showContainer = true,
+                    showGlow = true
+                )
+
+                Spacer(modifier = Modifier.width(14.dp))
+
+                Column {
+                    Text(
+                        text = strings.appTitle,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AppTextPrimary
+                    )
+                    Text(
+                        text = strings.versionFree,
+                        fontSize = 12.sp,
+                        color = VpnPrimaryBlue,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
         // Card 1: VPN Security Toggles
         Card(
             shape = RoundedCornerShape(18.dp),

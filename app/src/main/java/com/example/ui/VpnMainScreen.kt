@@ -58,8 +58,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.localization.LocalAppLanguage
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
+import com.example.ui.components.AppBrandLogo
 import com.example.ui.components.AppPermissionsDialog
 import com.example.ui.components.ConnectionDetailsDialog
 import com.example.ui.components.DataUsageDialog
@@ -124,6 +126,7 @@ fun VpnMainScreen(
 
     CompositionLocalProvider(
         LocalLayoutDirection provides effectiveLanguage.layoutDirection,
+        LocalAppLanguage provides effectiveLanguage,
         LocalAppStrings provides strings
     ) {
         Scaffold(
@@ -141,8 +144,8 @@ fun VpnMainScreen(
                         selected = selectedTabIndex == 0,
                         onClick = { selectedTabIndex = 0 },
                         icon = {
-                            Icon(
-                                imageVector = Icons.Default.Shield,
+                            AppBrandLogo(
+                                size = 24.dp,
                                 contentDescription = strings.navHome
                             )
                         },
@@ -390,20 +393,11 @@ private fun HomeContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(38.dp)
-                        .clip(CircleShape)
-                        .background(VpnPrimaryBlueSoft)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Shield,
-                        contentDescription = null,
-                        tint = VpnPrimaryBlue,
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
+                AppBrandLogo(
+                    size = 38.dp,
+                    showContainer = true,
+                    showGlow = true
+                )
 
                 Spacer(modifier = Modifier.width(10.dp))
 

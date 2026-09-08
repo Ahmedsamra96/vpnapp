@@ -53,6 +53,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.localization.AppLanguage
+import com.example.localization.LocalAppLanguage
+import com.example.localization.LocalAppStrings
 import com.example.model.VpnServer
 import com.example.ui.ServerFilterCategory
 import com.example.ui.theme.CyberAmber
@@ -83,6 +86,8 @@ fun ServerListSheet(
     onRefreshServers: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    val strings = LocalAppStrings.current
+    val isArabic = LocalAppLanguage.current == AppLanguage.ARABIC
     val infiniteTransition = rememberInfiniteTransition(label = "refresh_spin")
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -122,13 +127,13 @@ fun ServerListSheet(
             ) {
                 Column {
                     Text(
-                        text = "خوادم OpenVPN المجانية",
+                        text = strings.serversTitle,
                         color = TextPrimary,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "جميع الخوادم مجانية بنسبة 100% بدون أي اشتراكات",
+                        text = strings.serversSubtitle,
                         color = CyberEmerald,
                         fontSize = 12.sp
                     )
@@ -142,7 +147,7 @@ fun ServerListSheet(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
-                            contentDescription = "تحديث الخوادم",
+                            contentDescription = strings.refreshServers,
                             tint = CyberCyan,
                             modifier = Modifier.rotate(if (isLoading) rotation else 0f)
                         )
@@ -151,7 +156,7 @@ fun ServerListSheet(
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "إغلاق",
+                            contentDescription = strings.closeBtn,
                             tint = TextSecondary
                         )
                     }
@@ -164,7 +169,7 @@ fun ServerListSheet(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = onSearchChange,
-                placeholder = { Text("ابحث عن دولة أو مدينة أو IP…", color = TextMuted, fontSize = 14.sp) },
+                placeholder = { Text(strings.searchPlaceholder, color = TextMuted, fontSize = 14.sp) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -177,7 +182,7 @@ fun ServerListSheet(
                         IconButton(onClick = { onSearchChange("") }) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "مسح",
+                                contentDescription = strings.clearButton,
                                 tint = TextMuted
                             )
                         }
@@ -218,7 +223,7 @@ fun ServerListSheet(
                     onClick = { onCategoryChange(ServerFilterCategory.ALL) },
                     text = {
                         Text(
-                            text = "الكل (${servers.size})",
+                            text = "${strings.filterAll} (${servers.size})",
                             fontSize = 13.sp,
                             fontWeight = if (selectedCategory == ServerFilterCategory.ALL) FontWeight.Bold else FontWeight.Normal
                         )
@@ -229,7 +234,7 @@ fun ServerListSheet(
                     onClick = { onCategoryChange(ServerFilterCategory.FASTEST) },
                     text = {
                         Text(
-                            text = "الأسرع ⚡",
+                            text = "${strings.filterFast} ⚡",
                             fontSize = 13.sp,
                             fontWeight = if (selectedCategory == ServerFilterCategory.FASTEST) FontWeight.Bold else FontWeight.Normal
                         )
@@ -240,7 +245,7 @@ fun ServerListSheet(
                     onClick = { onCategoryChange(ServerFilterCategory.FAVORITES) },
                     text = {
                         Text(
-                            text = "المفضلة ⭐",
+                            text = strings.filterFavorites,
                             fontSize = 13.sp,
                             fontWeight = if (selectedCategory == ServerFilterCategory.FAVORITES) FontWeight.Bold else FontWeight.Normal
                         )
@@ -267,7 +272,7 @@ fun ServerListSheet(
                                 .padding(vertical = 40.dp)
                         ) {
                             Text(
-                                text = if (selectedCategory == ServerFilterCategory.FAVORITES) "لا توجد خوادم في المفضلة بعد" else "لم يتم العثور على خوادم مطابقة",
+                                text = if (selectedCategory == ServerFilterCategory.FAVORITES) strings.noFavoritesFound else strings.noServersFound,
                                 color = TextMuted,
                                 fontSize = 14.sp
                             )
@@ -277,6 +282,8 @@ fun ServerListSheet(
                     items(servers, key = { it.id }) { server ->
                         ServerListItem(
                             server = server,
+                            isArabic = isArabic,
+                            strings = strings,
                             isSelected = selectedServer.id == server.id,
                             onSelect = {
                                 onSelectServer(server)
@@ -294,6 +301,8 @@ fun ServerListSheet(
 @Composable
 private fun ServerListItem(
     server: VpnServer,
+    isArabic: Boolean,
+    strings: com.example.localization.AppStrings,
     isSelected: Boolean,
     onSelect: () -> Unit,
     onToggleFavorite: () -> Unit
@@ -334,7 +343,7 @@ private fun ServerListItem(
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = server.countryAr,
+                        text = server.getDisplayName(isArabic, strings.optimalServer),
                         color = TextPrimary,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold
@@ -347,7 +356,7 @@ private fun ServerListItem(
                                 .background(CyberCyan.copy(alpha = 0.2f))
                                 .padding(horizontal = 5.dp, vertical = 1.dp)
                         ) {
-                            Text("تلقائي", color = CyberCyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            Text(strings.autoServerBadge, color = CyberCyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -398,7 +407,7 @@ private fun ServerListItem(
             ) {
                 Icon(
                     imageVector = if (server.isFavorite) Icons.Default.Star else Icons.Outlined.StarBorder,
-                    contentDescription = "تفضيل الخادم",
+                    contentDescription = strings.favoriteServerAction,
                     tint = if (server.isFavorite) CyberAmber else TextMuted,
                     modifier = Modifier.size(18.dp)
                 )
@@ -408,7 +417,7 @@ private fun ServerListItem(
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
                     imageVector = Icons.Default.Check,
-                    contentDescription = "محدد",
+                    contentDescription = strings.selectedServerAction,
                     tint = CyberCyan,
                     modifier = Modifier.size(20.dp)
                 )

@@ -107,8 +107,24 @@ class VpnGateRepository(private val context: Context) {
             }
         }
 
+        // Check bundled live servers database in assets
+        try {
+            context.assets.open("vpngate_bundled.csv").bufferedReader().use { reader ->
+                val bundledCsv = reader.readText()
+                if (bundledCsv.isNotBlank()) {
+                    val bundledServers = parseVpnGateCsv(bundledCsv)
+                    if (bundledServers.isNotEmpty()) {
+                        Log.i("VpnGateRepo", "Using ${bundledServers.size} bundled live servers from assets")
+                        return@withContext assembleServersList(bundledServers, defaultList, favorites)
+                    }
+                }
+            }
+        } catch (_: Exception) {
+            // Assets not found or error reading
+        }
+
         // Fallback gracefully to high-performance bundled servers
-        Log.i("VpnGateRepo", "Using bundled high-speed servers")
+        Log.i("VpnGateRepo", "Using default high-speed servers")
         defaultList.map { it.copy(isFavorite = favorites.contains(it.id)) }
     }
 
@@ -117,7 +133,15 @@ class VpnGateRepository(private val context: Context) {
         defaultList: List<VpnServer>,
         favorites: Set<String>
     ): List<VpnServer> {
-        val optimalServer = defaultList.first()
+        val bestLive = liveServers.maxByOrNull { it.speedMbps } ?: defaultList.first()
+        val optimalServer = defaultList.first().copy(
+            ip = bestLive.ip,
+            pingMs = bestLive.pingMs,
+            speedMbps = bestLive.speedMbps,
+            ovpnConfigBase64 = bestLive.ovpnConfigBase64,
+            country = "Fastest Server (${bestLive.country})",
+            countryAr = "أسرع خادم (${bestLive.countryAr})"
+        )
         val uniqueCountryServers = mutableListOf(optimalServer)
         val seenCountryCodes = mutableSetOf<String>()
 

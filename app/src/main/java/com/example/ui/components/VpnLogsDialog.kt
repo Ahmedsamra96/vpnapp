@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.localization.LocalAppStrings
 import com.example.model.LogLevel
 import com.example.model.VpnLogEntry
 import com.example.ui.theme.CyberAmber
@@ -62,6 +63,7 @@ fun VpnLogsDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val strings = LocalAppStrings.current
     val listState = rememberLazyListState()
 
     LaunchedEffect(logs.size) {
@@ -99,7 +101,7 @@ fun VpnLogsDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "سجل أحداث OpenVPN",
+                            text = strings.logsDialogTitle,
                             color = TextPrimary,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -111,17 +113,17 @@ fun VpnLogsDialog(
                             val text = logs.joinToString("\n") { "[${it.timestamp}] ${it.message}" }
                             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                             clipboard.setPrimaryClip(ClipData.newPlainText("VPN Logs", text))
-                            Toast.makeText(context, "تم نسخ السجل إلى الحافظة", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, strings.logCopiedToClipboard, Toast.LENGTH_SHORT).show()
                         }) {
-                            Icon(Icons.Default.ContentCopy, contentDescription = "نسخ", tint = TextSecondary)
+                            Icon(Icons.Default.ContentCopy, contentDescription = strings.copyButton, tint = TextSecondary)
                         }
 
                         IconButton(onClick = { VpnStateRepository.clearLogs() }) {
-                            Icon(Icons.Default.DeleteOutline, contentDescription = "مسح", tint = TextSecondary)
+                            Icon(Icons.Default.DeleteOutline, contentDescription = strings.clearButton, tint = TextSecondary)
                         }
 
                         IconButton(onClick = onDismiss) {
-                            Icon(Icons.Default.Close, contentDescription = "إغلاق", tint = TextSecondary)
+                            Icon(Icons.Default.Close, contentDescription = strings.closeBtn, tint = TextSecondary)
                         }
                     }
                 }
@@ -140,7 +142,7 @@ fun VpnLogsDialog(
                 ) {
                     if (logs.isEmpty()) {
                         Text(
-                            text = "لا توجد سجلات اتصال حتى الآن…",
+                            text = strings.noLogsAvailable,
                             color = TextMuted,
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace,

@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             startVpnConnection()
         } else {
-            Toast.makeText(this, "يلزم منح إذن الـ VPN للاتصال بالخادم", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, viewModel.appStrings.value.vpnPermissionRequired, Toast.LENGTH_SHORT).show()
         }
     }
 

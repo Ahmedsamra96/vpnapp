@@ -89,30 +89,13 @@ fun ProminentDisclosureDialog(
                     .padding(24.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                // Header Icon
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .size(72.dp)
-                        .clip(CircleShape)
-                        .background(VpnPrimaryBlueSoft)
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .size(54.dp)
-                            .clip(CircleShape)
-                            .background(VpnPrimaryBlue)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Shield,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(28.dp)
-                        )
-                    }
-                }
+                // Header Brand Icon
+                AppBrandLogo(
+                    size = 76.dp,
+                    showContainer = true,
+                    showGlow = true,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 

@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.localization.LocalAppStrings
 import com.example.model.VpnAppSettings
 import com.example.ui.theme.CyberBackground
 import com.example.ui.theme.CyberBorder
@@ -66,6 +67,7 @@ fun VpnSettingsDialog(
     onImportCustomConfig: (name: String, config: String) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val strings = LocalAppStrings.current
     var showImportField by remember { mutableStateOf(false) }
     var configName by remember { mutableStateOf("") }
     var configText by remember { mutableStateOf("") }
@@ -99,7 +101,7 @@ fun VpnSettingsDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "إعدادات الأمان والبروتوكول",
+                            text = strings.securityProtocolSettingsTitle,
                             color = TextPrimary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
@@ -107,7 +109,7 @@ fun VpnSettingsDialog(
                     }
 
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.Default.Close, contentDescription = "إغلاق", tint = TextSecondary)
+                        Icon(Icons.Default.Close, contentDescription = strings.closeBtn, tint = TextSecondary)
                     }
                 }
 
@@ -116,8 +118,8 @@ fun VpnSettingsDialog(
                 // Kill Switch Setting Card
                 SettingToggleRow(
                     icon = Icons.Default.Security,
-                    title = "مفتاح القفل (Kill Switch)",
-                    subtitle = "قطع حركة المرور فوراً عند انقطاع اتصال VPN لمنع أي تسريب",
+                    title = strings.killSwitchTitle,
+                    subtitle = strings.killSwitchSubtitle,
                     checked = settings.killSwitchEnabled,
                     onCheckedChange = onToggleKillSwitch
                 )
@@ -127,8 +129,8 @@ fun VpnSettingsDialog(
                 // DNS Leak Protection Setting Card
                 SettingToggleRow(
                     icon = Icons.Default.Dns,
-                    title = "حماية تسريب DNS",
-                    subtitle = "توجيه استعلامات النطاق عبر خوادم Cloudflare المشفرة (1.1.1.1)",
+                    title = strings.dnsLeakTitle,
+                    subtitle = strings.dnsLeakSubtitle,
                     checked = settings.dnsLeakProtection,
                     onCheckedChange = onToggleDnsLeak
                 )
@@ -137,7 +139,7 @@ fun VpnSettingsDialog(
 
                 // Protocol Selector
                 Text(
-                    text = "بروتوكول الاتصال (Protocol)",
+                    text = strings.protocolTitle,
                     color = TextPrimary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -148,7 +150,7 @@ fun VpnSettingsDialog(
                     FilterChip(
                         selected = settings.preferredProtocol == "UDP",
                         onClick = { onSetProtocol("UDP") },
-                        label = { Text("OpenVPN UDP (أسرع)") },
+                        label = { Text(strings.udpFastLabel) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = CyberCyan.copy(alpha = 0.2f),
                             selectedLabelColor = CyberCyan,
@@ -165,7 +167,7 @@ fun VpnSettingsDialog(
                     FilterChip(
                         selected = settings.preferredProtocol == "TCP",
                         onClick = { onSetProtocol("TCP") },
-                        label = { Text("OpenVPN TCP (أكثر استقراراً)") },
+                        label = { Text(strings.tcpStableLabel) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = CyberCyan.copy(alpha = 0.2f),
                             selectedLabelColor = CyberCyan,
@@ -193,7 +195,7 @@ fun VpnSettingsDialog(
                     ) {
                         Icon(Icons.Default.FileUpload, contentDescription = null, tint = CyberCyan)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("استيراد ملف تكوين OpenVPN (.ovpn)", color = TextPrimary, fontSize = 13.sp)
+                        Text(strings.customConfigImportTitle, color = TextPrimary, fontSize = 13.sp)
                     }
                 } else {
                     Column(
@@ -205,7 +207,7 @@ fun VpnSettingsDialog(
                             .padding(14.dp)
                     ) {
                         Text(
-                            text = "إضافة خادم مخصص",
+                            text = strings.customConfigTitle,
                             color = CyberCyan,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
@@ -215,7 +217,7 @@ fun VpnSettingsDialog(
                         OutlinedTextField(
                             value = configName,
                             onValueChange = { configName = it },
-                            placeholder = { Text("اسم الخادم (مثال: سيرفري الخاص)", color = TextMuted, fontSize = 12.sp) },
+                            placeholder = { Text(strings.customConfigNamePlaceholder, color = TextMuted, fontSize = 12.sp) },
                             singleLine = true,
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedTextColor = TextPrimary,
@@ -231,7 +233,7 @@ fun VpnSettingsDialog(
                         OutlinedTextField(
                             value = configText,
                             onValueChange = { configText = it },
-                            placeholder = { Text("الصق محتوى ملف .ovpn هنا…", color = TextMuted, fontSize = 12.sp) },
+                            placeholder = { Text(strings.customConfigContentPlaceholder, color = TextMuted, fontSize = 12.sp) },
                             minLines = 3,
                             maxLines = 5,
                             colors = OutlinedTextFieldDefaults.colors(
@@ -253,7 +255,7 @@ fun VpnSettingsDialog(
                                 onClick = { showImportField = false },
                                 colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.ui.graphics.Color.Transparent)
                             ) {
-                                Text("إلغاء", color = TextSecondary)
+                                Text(strings.cancelBtn, color = TextSecondary)
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             Button(
@@ -267,7 +269,7 @@ fun VpnSettingsDialog(
                                 colors = ButtonDefaults.buttonColors(containerColor = CyberCyan),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
-                                Text("حفظ واستخدام", color = androidx.compose.ui.graphics.Color.Black, fontWeight = FontWeight.Bold)
+                                Text(strings.saveAndUseBtn, color = androidx.compose.ui.graphics.Color.Black, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -292,7 +294,7 @@ fun VpnSettingsDialog(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "هذا التطبيق مجاني بالكامل بدون أي اشتراكات أو خطط مدفوعة",
+                        text = strings.freeGuaranteeBadge,
                         color = CyberEmerald,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium

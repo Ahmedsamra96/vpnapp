@@ -128,7 +128,7 @@ fun LanguageSelectDialog(
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = strings.closeBtn,
                             tint = AppTextSecondary
                         )
                     }
@@ -142,8 +142,8 @@ fun LanguageSelectDialog(
                         LanguageOptionItem(
                             language = AppLanguage.SYSTEM,
                             flag = "🌐",
-                            nativeName = strings.chooseLanguageSubtitle.let { "افتراضي النظام (System Default)" },
-                            secondaryName = "Automatic based on device / store locale"
+                            nativeName = strings.systemDefaultName,
+                            secondaryName = strings.systemDefaultSubtitle
                         ),
                         LanguageOptionItem(
                             language = AppLanguage.ARABIC,

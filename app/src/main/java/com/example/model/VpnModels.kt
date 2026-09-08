@@ -26,7 +26,12 @@ data class VpnServer(
     val flagEmoji: String = "🌐",
     val isFavorite: Boolean = false,
     val isOptimal: Boolean = false
-)
+) {
+    fun getDisplayName(isArabic: Boolean, optimalLabel: String): String {
+        if (isOptimal) return optimalLabel
+        return if (isArabic) countryAr else country
+    }
+}
 
 data class VpnTrafficStats(
     val downloadSpeedBps: Long = 0L,

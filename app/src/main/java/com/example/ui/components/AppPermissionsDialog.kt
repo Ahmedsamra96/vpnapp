@@ -56,10 +56,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
+import com.example.localization.LocalAppStrings
 import com.example.ui.theme.AppBgLight
 import com.example.ui.theme.AppBorderLight
 import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
 import com.example.ui.theme.AppTextPrimary
 import com.example.ui.theme.AppTextSecondary
 import com.example.ui.theme.VpnAmber
@@ -74,6 +74,7 @@ fun AppPermissionsDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val strings = LocalAppStrings.current
 
     val hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         ContextCompat.checkSelfPermission(
@@ -112,30 +113,21 @@ fun AppPermissionsDialog(
                         .padding(horizontal = 18.dp, vertical = 14.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(VpnPrimaryBlueSoft)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Security,
-                                contentDescription = null,
-                                tint = VpnPrimaryBlue,
-                                modifier = Modifier.size(22.dp)
-                            )
-                        }
+                        AppBrandLogo(
+                            size = 40.dp,
+                            showContainer = true,
+                            showGlow = false
+                        )
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(
-                                text = "أذونات التطبيق والشفافية",
+                                text = strings.permissionsHeader,
                                 fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = AppTextPrimary
                             )
                             Text(
-                                text = "وفق معايير الحد الأدنى من الأذونات",
+                                text = strings.permissionsSubheader,
                                 fontSize = 12.sp,
                                 color = AppTextSecondary
                             )
@@ -145,7 +137,7 @@ fun AppPermissionsDialog(
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = strings.closeBtn,
                             tint = AppTextSecondary
                         )
                     }
@@ -155,7 +147,7 @@ fun AppPermissionsDialog(
 
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
-                        text = "يطلب التطبيق فقط الأذونات الضرورية تقنياً لتشغيل نفق الـ VPN بأمان وفق سياسات Google Play.",
+                        text = strings.permissionsIntro,
                         fontSize = 12.5.sp,
                         color = AppTextSecondary,
                         lineHeight = 18.sp
@@ -166,10 +158,10 @@ fun AppPermissionsDialog(
                     // Permission 1: VPN Service
                     PermissionCard(
                         icon = Icons.Default.VpnKey,
-                        name = "إذن خدمة الـ VPN (VpnService)",
-                        status = "إذن نظام معتمد",
+                        name = strings.vpnKeyPermTitle,
+                        status = strings.vpnKeyPermStatus,
                         isGranted = true,
-                        description = "يتم طلبه تلقائياً عبر نافذة حماية نظام Android عند أول اتصال لإنشاء النفق المشفر بأمان.",
+                        description = strings.vpnKeyPermDesc,
                         actionButton = null
                     )
 
@@ -178,10 +170,10 @@ fun AppPermissionsDialog(
                     // Permission 2: Notifications
                     PermissionCard(
                         icon = Icons.Default.Notifications,
-                        name = "إذن الإشعارات (Foreground Service)",
-                        status = if (hasNotificationPermission) "ممنوح ومفعل" else "مطلوب لتنبيهات الاتصال",
+                        name = strings.notifPermTitle,
+                        status = if (hasNotificationPermission) strings.notifPermGranted else strings.notifPermRequired,
                         isGranted = hasNotificationPermission,
-                        description = "مطلوب وفق سياسة Google Play لإبقاء إشعار دائم في شريط الحالة أثناء عمل الـ VPN لتمكينك من متابعة سرعة النفق وإيقافه فوراً بنقرة واحدة.",
+                        description = strings.notifPermDesc,
                         actionButton = if (!hasNotificationPermission) {
                             {
                                 Button(
@@ -196,7 +188,7 @@ fun AppPermissionsDialog(
                                     colors = ButtonDefaults.buttonColors(containerColor = VpnPrimaryBlue),
                                     modifier = Modifier.height(36.dp)
                                 ) {
-                                    Text("تفعيل الإذن", fontSize = 12.sp, color = Color.White)
+                                    Text(strings.grantPermBtn, fontSize = 12.sp, color = Color.White)
                                 }
                             }
                         } else null
@@ -207,10 +199,10 @@ fun AppPermissionsDialog(
                     // Permission 3: Network Access
                     PermissionCard(
                         icon = Icons.Default.Wifi,
-                        name = "الوصول للإنترنت والشبكة (Internet)",
-                        status = "ممنوح تلقائياً",
+                        name = strings.netPermTitle,
+                        status = strings.netPermStatus,
                         isGranted = true,
-                        description = "إذن قياسي لتنزيل قائمة الخوادم العامة وإرسال واستقبال حزم بيانات الإنترنت.",
+                        description = strings.netPermDesc,
                         actionButton = null
                     )
 
@@ -232,7 +224,7 @@ fun AppPermissionsDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "فتح إعدادات التطبيق في النظام",
+                            text = strings.openSettingsBtn,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
                             color = AppTextPrimary

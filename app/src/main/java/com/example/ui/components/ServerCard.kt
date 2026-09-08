@@ -30,6 +30,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.localization.AppLanguage
+import com.example.localization.LocalAppLanguage
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
 import com.example.model.VpnServer
@@ -48,6 +50,7 @@ fun ServerCard(
     modifier: Modifier = Modifier
 ) {
     val strings = LocalAppStrings.current
+    val isArabic = LocalAppLanguage.current == AppLanguage.ARABIC
     Card(
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
@@ -95,13 +98,13 @@ fun ServerCard(
 
                 Column {
                     Text(
-                        text = server.country,
+                        text = server.getDisplayName(isArabic, strings.optimalServer),
                         color = AppTextPrimary,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = if (server.isOptimal) strings.optimalServer else server.city,
+                        text = if (server.isOptimal) strings.freeAndFastBadge else "${server.city} • ${server.pingMs} ms",
                         color = AppTextSecondary,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal
@@ -111,7 +114,7 @@ fun ServerCard(
 
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = "Change Server",
+                contentDescription = null,
                 tint = AppTextMuted,
                 modifier = Modifier.size(15.dp)
             )
