@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">OpenVPN Free</string>
+    <string name="vpn_title">OpenVPN Free</string>
+    <string name="connect">اتصال</string>
+    <string name="disconnect">قطع الاتصال</string>
+    <string name="connecting">جاري الاتصال…</string>
+    <string name="connected">متصل بأمان</string>
+    <string name="disconnected">غير متصل</string>
+    <string name="optimal_location">أسرع خادم تلقائي</string>
+    <string name="servers_title">قائمة الخوادم المجانية</string>
+    <string name="refresh_servers">تحديث الخوادم</string>
+    <string name="download_speed">تحميل</string>
+    <string name="upload_speed">رفع</string>
+    <string name="ping">الاستجابة</string>
+    <string name="ip_address">عنوان IP</string>
+    <string name="duration">المدة</string>
+    <string name="notification_channel_name">حالة اتصال VPN</string>
+    <string name="notification_channel_desc">إشعار لإبقاء خدمة VPN قيد التشغيل وتحديث الإحصائيات</string>
+</resources>
+
