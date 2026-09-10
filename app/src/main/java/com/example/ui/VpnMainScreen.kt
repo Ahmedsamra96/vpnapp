@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Lock
@@ -35,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -63,16 +63,17 @@ import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
 import com.example.ui.components.AppBrandLogo
 import com.example.ui.components.AppPermissionsDialog
+import com.example.ui.components.AppSplashScreen
 import com.example.ui.components.ConnectionDetailsDialog
 import com.example.ui.components.DataUsageDialog
 import com.example.ui.components.LanguageSelectDialog
 import com.example.ui.components.LocationsScreen
+import com.example.ui.components.OnboardingTourScreen
 import com.example.ui.components.PrivacyPolicyDialog
 import com.example.ui.components.ProminentDisclosureDialog
 import com.example.ui.components.ServerCard
 import com.example.ui.components.SettingsScreen
 import com.example.ui.components.TrafficDashboard
-import com.example.ui.components.VpnLogsDialog
 import com.example.ui.components.VpnPowerButton
 import com.example.ui.components.WelcomeOnboardingDialog
 import com.example.ui.theme.AppBgLight
@@ -91,7 +92,6 @@ fun VpnMainScreen(
     onConnectRequested: () -> Unit,
     onDisconnectRequested: () -> Unit,
     onReconnectRequested: () -> Unit = onConnectRequested,
-    onRequestNotificationPermission: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val connectionState by viewModel.connectionState.collectAsState()
@@ -101,6 +101,7 @@ fun VpnMainScreen(
     val settings by viewModel.settings.collectAsState()
     val userMessage by viewModel.userMessage.collectAsState()
     val hasAcceptedConsent by viewModel.hasAcceptedConsent.collectAsState()
+    val hasCompletedOnboarding by viewModel.hasCompletedOnboarding.collectAsState()
     val appLanguage by viewModel.appLanguage.collectAsState()
     val effectiveLanguage by viewModel.effectiveLanguage.collectAsState()
     val strings by viewModel.appStrings.collectAsState()
@@ -108,7 +109,6 @@ fun VpnMainScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    var showLogsDialog by remember { mutableStateOf(false) }
     var showConnectionDetails by remember { mutableStateOf(false) }
     var showOnboardingDialog by remember { mutableStateOf(false) }
     var showPrivacyPolicyDialog by remember { mutableStateOf(false) }
@@ -129,17 +129,35 @@ fun VpnMainScreen(
         LocalAppLanguage provides effectiveLanguage,
         LocalAppStrings provides strings
     ) {
-        Scaffold(
+        if (!hasCompletedOnboarding) {
+            OnboardingTourScreen(
+                onContinue = {
+                    viewModel.completeOnboarding()
+                },
+                onViewPrivacyPolicy = {
+                    showPrivacyPolicyDialog = true
+                }
+            )
+        } else {
+            Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             bottomBar = {
-                NavigationBar(
-                    containerColor = AppSurfaceLight,
-                    tonalElevation = 8.dp,
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, AppBorderLight)
-                        .testTag("main_bottom_nav")
+                        .background(MaterialTheme.colorScheme.surface)
                 ) {
+                    // Large Banner Ad displayed permanently at the bottom across all interfaces without "ADVERTISEMENT" text
+                    com.example.ui.components.AdMobBannerView()
+
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        tonalElevation = 8.dp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, MaterialTheme.colorScheme.outline)
+                            .testTag("main_bottom_nav")
+                    ) {
                     NavigationBarItem(
                         selected = selectedTabIndex == 0,
                         onClick = { selectedTabIndex = 0 },
@@ -159,8 +177,8 @@ fun VpnMainScreen(
                             selectedIconColor = VpnPrimaryBlue,
                             selectedTextColor = VpnPrimaryBlue,
                             indicatorColor = VpnPrimaryBlueSoft,
-                            unselectedIconColor = AppTextSecondary,
-                            unselectedTextColor = AppTextSecondary
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         modifier = Modifier.testTag("nav_item_home")
                     )
@@ -184,8 +202,8 @@ fun VpnMainScreen(
                             selectedIconColor = VpnPrimaryBlue,
                             selectedTextColor = VpnPrimaryBlue,
                             indicatorColor = VpnPrimaryBlueSoft,
-                            unselectedIconColor = AppTextSecondary,
-                            unselectedTextColor = AppTextSecondary
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         modifier = Modifier.testTag("nav_item_locations")
                     )
@@ -209,21 +227,22 @@ fun VpnMainScreen(
                             selectedIconColor = VpnPrimaryBlue,
                             selectedTextColor = VpnPrimaryBlue,
                             indicatorColor = VpnPrimaryBlueSoft,
-                            unselectedIconColor = AppTextSecondary,
-                            unselectedTextColor = AppTextSecondary
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         modifier = Modifier.testTag("nav_item_settings")
                     )
                 }
-            },
-            containerColor = AppBgLight,
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background,
             modifier = modifier.fillMaxSize()
         ) { innerPadding ->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .background(AppBgLight)
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 when (selectedTabIndex) {
                     0 -> HomeContent(
@@ -244,7 +263,6 @@ fun VpnMainScreen(
                         },
                         onSelectLocation = { selectedTabIndex = 1 },
                         onOpenDetails = { showConnectionDetails = true },
-                        onOpenLogs = { showLogsDialog = true },
                         onOpenHelp = { showOnboardingDialog = true }
                     )
 
@@ -267,7 +285,6 @@ fun VpnMainScreen(
 
                     2 -> SettingsScreen(
                         viewModel = viewModel,
-                        onShowLogs = { showLogsDialog = true },
                         onShowAbout = { showOnboardingDialog = true },
                         onShowPrivacyPolicy = { showPrivacyPolicyDialog = true },
                         onShowDataSafety = { showDataSafetyDialog = true },
@@ -308,14 +325,6 @@ fun VpnMainScreen(
         )
     }
 
-    // OpenVPN Live Logs Dialog
-    if (showLogsDialog) {
-        VpnLogsDialog(
-            logs = logs,
-            onDismiss = { showLogsDialog = false }
-        )
-    }
-
     // Google Play Mandatory Prominent In-App Disclosure & Consent
     if (showProminentDisclosureDialog) {
         ProminentDisclosureDialog(
@@ -353,13 +362,10 @@ fun VpnMainScreen(
     // App Permissions & Transparency Dialog
     if (showPermissionsDialog) {
         AppPermissionsDialog(
-            onRequestNotificationPermission = {
-                showPermissionsDialog = false
-                onRequestNotificationPermission()
-            },
             onDismiss = { showPermissionsDialog = false }
         )
     }
+        }
     }
 }
 
@@ -372,7 +378,6 @@ private fun HomeContent(
     onToggleConnect: () -> Unit,
     onSelectLocation: () -> Unit,
     onOpenDetails: () -> Unit,
-    onOpenLogs: () -> Unit,
     onOpenHelp: () -> Unit
 ) {
     val isConnected = connectionState == VpnConnectionState.CONNECTED
@@ -405,41 +410,23 @@ private fun HomeContent(
                     text = strings.appTitle,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AppTextPrimary
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
-                    onClick = onOpenLogs,
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(AppSurfaceLight)
-                        .border(1.dp, AppBorderLight, CircleShape)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.BugReport,
-                        contentDescription = strings.connectionLogsTitle,
-                        tint = AppTextSecondary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                IconButton(
                     onClick = onOpenHelp,
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(AppSurfaceLight)
-                        .border(1.dp, AppBorderLight, CircleShape)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                 ) {
                     Icon(
                         imageVector = Icons.Default.HelpOutline,
                         contentDescription = strings.helpSupportTitle,
-                        tint = AppTextSecondary,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -460,6 +447,7 @@ private fun HomeContent(
         // Concentric Power Button
         VpnPowerButton(
             connectionState = connectionState,
+            server = selectedServer,
             onToggleConnect = onToggleConnect
         )
 
@@ -476,11 +464,11 @@ private fun HomeContent(
             // Disconnected Feature Highlight Cards
             Card(
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(elevation = 3.dp, shape = RoundedCornerShape(18.dp), spotColor = Color(0x0A000000))
-                    .border(1.dp, AppBorderLight, RoundedCornerShape(18.dp))
+                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -495,7 +483,7 @@ private fun HomeContent(
                             text = strings.vpnSecurityCategory,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
-                            color = AppTextPrimary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
 
@@ -526,7 +514,7 @@ private fun HomeContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 

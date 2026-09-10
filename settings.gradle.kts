@@ -22,6 +22,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "OpenVPN Free"
+rootProject.name = "Ruvon VPN"
 
 include(":app")

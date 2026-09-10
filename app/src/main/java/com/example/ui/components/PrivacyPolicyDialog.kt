@@ -91,20 +91,11 @@ fun PrivacyPolicyDialog(
                         .padding(horizontal = 18.dp, vertical = 14.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(VpnPrimaryBlueSoft)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Policy,
-                                contentDescription = null,
-                                tint = VpnPrimaryBlue,
-                                modifier = Modifier.size(22.dp)
-                            )
-                        }
+                        AppBrandLogo(
+                            size = 40.dp,
+                            showContainer = true,
+                            showGlow = false
+                        )
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(

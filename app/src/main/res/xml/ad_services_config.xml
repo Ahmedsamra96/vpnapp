@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ad-services-config>
+    <!-- Configures AdServices to disable telemetry fallback errors on virtual devices / emulators -->
+    <attribution allowAdIdMatching="false" allowUserData="false" />
+    <fledge allowAdSelection="false" />
+    <topics allowTopics="false" />
+</ad-services-config>

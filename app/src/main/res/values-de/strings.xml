@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Ruvon VPN</string>
+    <string name="vpn_title">Ruvon VPN</string>
+    <string name="connect">Verbinden</string>
+    <string name="disconnect">Trennen</string>
+    <string name="connecting">Verbindung wird hergestellt…</string>
+    <string name="connected">Verbunden &amp; Geschützt</string>
+    <string name="disconnected">Getrennt</string>
+    <string name="optimal_location">Schnellster Server (Auto)</string>
+    <string name="servers_title">VPN-Server</string>
+    <string name="refresh_servers">Aktualisieren</string>
+    <string name="download_speed">Download</string>
+    <string name="upload_speed">Upload</string>
+    <string name="ping">Ping</string>
+    <string name="ip_address">IP-Adresse</string>
+    <string name="duration">Dauer</string>
+    <string name="notification_channel_name">VPN-Verbindungsstatus</string>
+    <string name="notification_channel_desc">Dauerhafte Benachrichtigung mit Tunnelstatus und Geschwindigkeit</string>
+    <string name="privacy_policy_title">Datenschutzerklärung</string>
+    <string name="data_safety_title">Datensicherheit</string>
+    <string name="vpn_disclosure_title">VPN-Dienst-Offenlegung</string>
+    <string name="app_permissions_title">App-Berechtigungen</string>
+    <string name="choose_language_title">Sprache wählen</string>
+</resources>

@@ -1,10 +1,7 @@
 package com.example
 
-import android.Manifest
 import android.app.Activity
-import android.content.pm.PackageManager
 import android.net.VpnService
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -12,7 +9,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.example.ads.AdMobManager
 import com.example.ui.VpnMainScreen
 import com.example.ui.VpnViewModel
 import com.example.ui.theme.MyApplicationTheme
@@ -33,26 +32,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Launcher for Android 13+ Notification permission
-    private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
-        // Notification permission granted or denied, proceed with VPN
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Check notification permission for Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
+        // Initialize AdMob Test Ads according to Google Play policies
+        AdMobManager.initialize(application)
+
+        // Show App Open Ad on cold start once initialized (AdMob compliant)
+        AdMobManager.showAppOpenAdIfAvailable(this)
 
         setContent {
-            MyApplicationTheme {
+            val themeMode by viewModel.themeMode.collectAsState()
+
+            MyApplicationTheme(themeMode = themeMode) {
                 VpnMainScreen(
                     viewModel = viewModel,
                     onConnectRequested = {
@@ -60,14 +53,11 @@ class MainActivity : ComponentActivity() {
                     },
                     onDisconnectRequested = {
                         OpenVpnAndroidService.stopVpn(this)
+                        // Show interstitial ad after user finishes disconnect (AdMob natural break)
+                        AdMobManager.showInterstitialIfReady(this@MainActivity)
                     },
                     onReconnectRequested = {
                         requestVpnConnection()
-                    },
-                    onRequestNotificationPermission = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                        }
                     }
                 )
             }

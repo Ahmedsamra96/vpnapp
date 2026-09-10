@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">OpenVPN Free</string>
-    <string name="vpn_title">OpenVPN Free</string>
+    <string name="app_name">Ruvon VPN</string>
+    <string name="vpn_title">Ruvon VPN</string>
     <string name="connect">Connexion</string>
     <string name="disconnect">Déconnexion</string>
     <string name="connecting">Connexion en cours…</string>

@@ -46,6 +46,9 @@ import com.example.ui.theme.AppBorderLight
 import com.example.ui.theme.AppTextMuted
 import com.example.ui.theme.AppTextPrimary
 import com.example.ui.theme.AppTextSecondary
+import com.example.localization.AppLanguage
+import com.example.localization.LocalAppLanguage
+import com.example.model.VpnServer
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnDisconnectedRed
 import com.example.ui.theme.VpnPrimaryBlue
@@ -57,6 +60,7 @@ import com.example.ui.theme.VpnPrimaryBlueSoft
 fun VpnPowerButton(
     connectionState: VpnConnectionState,
     onToggleConnect: () -> Unit,
+    server: VpnServer? = null,
     modifier: Modifier = Modifier
 ) {
     val isConnected = connectionState == VpnConnectionState.CONNECTED
@@ -117,10 +121,22 @@ fun VpnPowerButton(
                 }
             }
 
+            val ring1Color = if (isConnected) {
+                Color(0xFFDBEAFE)
+            } else {
+                androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            }
+
+            val ring2Color = if (isConnected) {
+                Color(0xFFBFDBFE)
+            } else {
+                androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
+            }
+
             // Outer Concentric Decorative Ring
             Canvas(modifier = Modifier.size(195.dp)) {
                 drawCircle(
-                    color = if (isConnected) Color(0xFFDBEAFE) else Color(0xFFEDF2F7),
+                    color = ring1Color,
                     radius = size.minDimension / 2
                 )
             }
@@ -128,7 +144,7 @@ fun VpnPowerButton(
             // Middle Concentric Ring
             Canvas(modifier = Modifier.size(165.dp)) {
                 drawCircle(
-                    color = if (isConnected) Color(0xFFBFDBFE) else Color(0xFFF8FAFC),
+                    color = ring2Color,
                     radius = size.minDimension / 2
                 )
             }
@@ -168,10 +184,11 @@ fun VpnPowerButton(
                     )
                 )
             } else {
+                val baseSurface = androidx.compose.material3.MaterialTheme.colorScheme.surface
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color.White,
-                        Color(0xFFF8FAFC)
+                        baseSurface,
+                        androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
                     )
                 )
             }
@@ -190,7 +207,7 @@ fun VpnPowerButton(
                     .background(buttonBrush)
                     .border(
                         width = if (isConnected) 0.dp else 1.5.dp,
-                        color = if (isConnected) Color.Transparent else AppBorderLight,
+                        color = if (isConnected) Color.Transparent else androidx.compose.material3.MaterialTheme.colorScheme.outline,
                         shape = CircleShape
                     )
                     .clickable(
@@ -202,7 +219,7 @@ fun VpnPowerButton(
                 Icon(
                     imageVector = Icons.Default.PowerSettingsNew,
                     contentDescription = "VPN Power Button",
-                    tint = if (isConnected || isConnecting) Color.White else Color(0xFF475569),
+                    tint = if (isConnected || isConnecting) Color.White else androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(54.dp)
                 )
             }
@@ -211,11 +228,25 @@ fun VpnPowerButton(
         Spacer(modifier = Modifier.height(14.dp))
 
         val strings = LocalAppStrings.current
+        val isArabic = LocalAppLanguage.current == AppLanguage.ARABIC
+
+        val connectedTitle = if (server != null) {
+            val displayName = server.getDisplayName(isArabic, strings.optimalServer)
+            strings.formatConnectedTo(displayName)
+        } else {
+            strings.statusConnected
+        }
+
+        val connectedSubtitle = if (server != null && !server.isOptimal) {
+            "${server.flagEmoji} ${server.countryCode} • ${server.ip}"
+        } else {
+            strings.connectionProtected
+        }
 
         // Status Title
         Text(
             text = when (connectionState) {
-                VpnConnectionState.CONNECTED -> strings.statusConnected
+                VpnConnectionState.CONNECTED -> connectedTitle
                 VpnConnectionState.CONNECTING -> strings.statusConnecting
                 VpnConnectionState.DISCONNECTING -> strings.tapToCancel
                 VpnConnectionState.DISCONNECTED -> strings.statusDisconnected
@@ -224,7 +255,7 @@ fun VpnPowerButton(
                 VpnConnectionState.CONNECTED -> VpnConnectedGreen
                 VpnConnectionState.CONNECTING -> VpnPrimaryBlue
                 VpnConnectionState.DISCONNECTING -> VpnDisconnectedRed
-                VpnConnectionState.DISCONNECTED -> AppTextPrimary
+                VpnConnectionState.DISCONNECTED -> androidx.compose.material3.MaterialTheme.colorScheme.onBackground
             },
             fontSize = 21.sp,
             fontWeight = FontWeight.Bold,
@@ -236,12 +267,12 @@ fun VpnPowerButton(
         // Status Subtitle
         Text(
             text = when (connectionState) {
-                VpnConnectionState.CONNECTED -> strings.connectionProtected
+                VpnConnectionState.CONNECTED -> connectedSubtitle
                 VpnConnectionState.CONNECTING -> strings.statusConnecting
                 VpnConnectionState.DISCONNECTING -> strings.tapToCancel
                 VpnConnectionState.DISCONNECTED -> strings.notProtected
             },
-            color = AppTextSecondary,
+            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal
         )

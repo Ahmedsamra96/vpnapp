@@ -1,6 +1,6 @@
 {
-  "name": "OpenVPN Free",
-  "description": "تطبيق VPN احترافي مجاني للاتصال بنقرة واحدة مع خوادم OpenVPN مجانية وسريعة حول العالم.",
+  "name": "Ruvon VPN",
+  "description": "تطبيق Ruvon VPN الاحترافي والسريع للاتصال الآمن والمشفر بنقرة واحدة بخوادم عالمية.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

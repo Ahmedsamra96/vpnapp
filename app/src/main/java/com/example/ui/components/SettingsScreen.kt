@@ -21,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.DataUsage
 import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Info
@@ -37,6 +36,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -71,7 +71,6 @@ import com.example.ui.theme.VpnPrimaryBlue
 @Composable
 fun SettingsScreen(
     viewModel: VpnViewModel,
-    onShowLogs: () -> Unit,
     onShowAbout: () -> Unit,
     onShowPrivacyPolicy: () -> Unit = {},
     onShowDataSafety: () -> Unit = {},
@@ -86,12 +85,13 @@ fun SettingsScreen(
     val strings = LocalAppStrings.current
 
     var autoConnect by remember { mutableStateOf(false) }
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    var showThemeDialog by remember { mutableStateOf(false) }
+    val themeMode by viewModel.themeMode.collectAsState()
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(AppBgLight)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp)
     ) {
@@ -102,12 +102,12 @@ fun SettingsScreen(
             text = strings.settingsTitle,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = AppTextPrimary
+            color = MaterialTheme.colorScheme.onBackground
         )
         Text(
             text = strings.settingsSubtitle,
             fontSize = 13.sp,
-            color = AppTextSecondary
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -115,11 +115,11 @@ fun SettingsScreen(
         // App Brand Header Card
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 3.dp, shape = RoundedCornerShape(20.dp), spotColor = Color(0x0C000000))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(20.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -138,7 +138,7 @@ fun SettingsScreen(
                         text = strings.appTitle,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
-                        color = AppTextPrimary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = strings.versionFree,
@@ -155,11 +155,11 @@ fun SettingsScreen(
         // Card 1: VPN Security Toggles
         Card(
             shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 3.dp, shape = RoundedCornerShape(18.dp), spotColor = Color(0x0C000000))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(18.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
         ) {
             Column(modifier = Modifier.padding(vertical = 6.dp)) {
                 // Auto-connect
@@ -172,7 +172,7 @@ fun SettingsScreen(
                     testTag = "toggle_auto_connect"
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outline)
 
                 // Kill Switch
                 SettingToggleRow(
@@ -184,7 +184,7 @@ fun SettingsScreen(
                     testTag = "toggle_kill_switch"
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outline)
 
                 // DNS Leak Protection
                 SettingToggleRow(
@@ -196,17 +196,7 @@ fun SettingsScreen(
                     testTag = "toggle_dns_leak"
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
 
-                // Notifications
-                SettingToggleRow(
-                    icon = Icons.Default.Notifications,
-                    title = strings.notificationsTitle,
-                    subtitle = strings.notificationsSubtitle,
-                    checked = notificationsEnabled,
-                    onCheckedChange = { notificationsEnabled = it },
-                    testTag = "toggle_notifications"
-                )
             }
         }
 
@@ -215,11 +205,11 @@ fun SettingsScreen(
         // Card 2: Preferences (Language, Appearance, Protocol)
         Card(
             shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 3.dp, shape = RoundedCornerShape(18.dp), spotColor = Color(0x0C000000))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(18.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
         ) {
             Column(modifier = Modifier.padding(vertical = 6.dp)) {
                 // Protocol
@@ -233,7 +223,7 @@ fun SettingsScreen(
                     }
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outline)
 
                 // Language
                 val displayLangName = if (appLanguage == AppLanguage.SYSTEM) {
@@ -249,14 +239,20 @@ fun SettingsScreen(
                     onClick = onOpenLanguageSelector
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outline)
 
                 // App Appearance
+                val themeLabel = when (themeMode) {
+                    com.example.model.AppThemeMode.SYSTEM -> strings.appearanceSystem
+                    com.example.model.AppThemeMode.LIGHT -> strings.appearanceLight
+                    com.example.model.AppThemeMode.DARK -> strings.appearanceDark
+                }
+
                 SettingActionRow(
                     icon = Icons.Default.Palette,
                     title = strings.appearanceTitle,
-                    value = strings.appearanceLight,
-                    onClick = { }
+                    value = themeLabel,
+                    onClick = { showThemeDialog = true }
                 )
             }
         }
@@ -266,24 +262,14 @@ fun SettingsScreen(
         // Card 3: Advanced & About
         Card(
             shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 3.dp, shape = RoundedCornerShape(18.dp), spotColor = Color(0x0C000000))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(18.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
         ) {
             Column(modifier = Modifier.padding(vertical = 6.dp)) {
-                // Connection Logs
-                SettingActionRow(
-                    icon = Icons.Default.BugReport,
-                    title = strings.connectionLogsTitle,
-                    value = strings.viewLiveLogs,
-                    onClick = onShowLogs
-                )
-
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
-
-                // About ShieldVPN
+                // About Ruvon VPN
                 SettingActionRow(
                     icon = Icons.Default.Info,
                     title = strings.aboutAppTitle,
@@ -291,7 +277,7 @@ fun SettingsScreen(
                     onClick = onShowAbout
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outline)
 
                 // Help & Support
                 SettingActionRow(
@@ -308,11 +294,11 @@ fun SettingsScreen(
         // Card 4: Privacy & Google Play Compliance
         Card(
             shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 3.dp, shape = RoundedCornerShape(18.dp), spotColor = Color(0x0C000000))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(18.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
         ) {
             Column(modifier = Modifier.padding(vertical = 6.dp)) {
                 // Privacy Policy
@@ -323,7 +309,7 @@ fun SettingsScreen(
                     onClick = onShowPrivacyPolicy
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outline)
 
                 // Data Safety & Security
                 SettingActionRow(
@@ -333,7 +319,7 @@ fun SettingsScreen(
                     onClick = onShowDataSafety
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outline)
 
                 // VPN Service Disclosure
                 SettingActionRow(
@@ -343,7 +329,7 @@ fun SettingsScreen(
                     onClick = onShowDisclosure
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = AppBorderLight)
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outline)
 
                 // App Permissions
                 SettingActionRow(
@@ -356,6 +342,16 @@ fun SettingsScreen(
         }
 
         Spacer(modifier = Modifier.height(30.dp))
+    }
+
+    if (showThemeDialog) {
+        ThemeSelectDialog(
+            currentTheme = themeMode,
+            onThemeSelected = { mode ->
+                viewModel.setThemeMode(mode)
+            },
+            onDismiss = { showThemeDialog = false }
+        )
     }
 }
 
@@ -384,12 +380,12 @@ private fun SettingToggleRow(
                 modifier = Modifier
                     .size(38.dp)
                     .clip(CircleShape)
-                    .background(AppSurfaceVariantLight)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = AppTextPrimary,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -401,12 +397,12 @@ private fun SettingToggleRow(
                     text = title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = AppTextPrimary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = subtitle,
                     fontSize = 12.sp,
-                    color = AppTextSecondary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -418,7 +414,7 @@ private fun SettingToggleRow(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = VpnPrimaryBlue,
                 uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color(0xFFCBD5E1)
+                uncheckedTrackColor = MaterialTheme.colorScheme.outline
             ),
             modifier = Modifier.testTag(testTag)
         )
@@ -449,12 +445,12 @@ private fun SettingActionRow(
                 modifier = Modifier
                     .size(38.dp)
                     .clip(CircleShape)
-                    .background(AppSurfaceVariantLight)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = AppTextPrimary,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -465,7 +461,7 @@ private fun SettingActionRow(
                 text = title,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = AppTextPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 
@@ -473,7 +469,7 @@ private fun SettingActionRow(
             Text(
                 text = value,
                 fontSize = 13.sp,
-                color = AppTextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -481,7 +477,7 @@ private fun SettingActionRow(
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = null,
-                tint = AppTextMuted,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(13.dp)
             )
         }

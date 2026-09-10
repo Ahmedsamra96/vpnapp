@@ -14,7 +14,7 @@ android {
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
   defaultConfig {
-    applicationId = "com.aistudio.openvpnfree.yqvptz"
+    applicationId = "com.syzarapps.ruvonvpn"
     minSdk = 24
     targetSdk = 36
     versionCode = 1
@@ -45,8 +45,13 @@ android {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
+      manifestPlaceholders["admobAppId"] = "ca-app-pub-7820157448660134~1504861739"
     }
-    debug { signingConfig = signingConfigs.getByName("debugConfig") }
+    debug {
+      signingConfig = signingConfigs.getByName("debugConfig")
+      // In Debug / development, use official Google test app ID to keep your account safe
+      manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -118,6 +123,7 @@ dependencies {
   implementation(libs.moshi.kotlin)
   implementation(libs.okhttp)
   // implementation(libs.play.services.location)
+  implementation(libs.play.services.ads)
   implementation(libs.retrofit)
   implementation("io.github.tim06:vpnprotocols-openvpn:3.0.4")
   testImplementation(libs.androidx.compose.ui.test.junit4)

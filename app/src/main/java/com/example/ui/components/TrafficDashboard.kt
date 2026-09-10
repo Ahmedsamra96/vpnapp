@@ -69,11 +69,11 @@ fun TrafficDashboard(
             // Downloaded Card
             Card(
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+                colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
                 modifier = Modifier
                     .weight(1f)
                     .shadow(elevation = 3.dp, shape = RoundedCornerShape(18.dp), spotColor = Color(0x10000000))
-                    .border(1.dp, AppBorderLight, RoundedCornerShape(18.dp))
+                    .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -99,13 +99,13 @@ fun TrafficDashboard(
                     Column {
                         Text(
                             text = stats.formattedDownloaded(),
-                            color = AppTextPrimary,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = strings.download,
-                            color = AppTextSecondary,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 12.sp
                         )
                     }
@@ -115,11 +115,11 @@ fun TrafficDashboard(
             // Uploaded Card
             Card(
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+                colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
                 modifier = Modifier
                     .weight(1f)
                     .shadow(elevation = 3.dp, shape = RoundedCornerShape(18.dp), spotColor = Color(0x10000000))
-                    .border(1.dp, AppBorderLight, RoundedCornerShape(18.dp))
+                    .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -145,13 +145,13 @@ fun TrafficDashboard(
                     Column {
                         Text(
                             text = stats.formattedUploaded(),
-                            color = AppTextPrimary,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = strings.upload,
-                            color = AppTextSecondary,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 12.sp
                         )
                     }
@@ -164,11 +164,11 @@ fun TrafficDashboard(
         // Connection Duration Card
         Card(
             shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 3.dp, shape = RoundedCornerShape(18.dp), spotColor = Color(0x10000000))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(18.dp))
+                .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
                 .then(
                     if (onClickDetails != null) Modifier.clickable(onClick = onClickDetails) else Modifier
                 )
@@ -182,12 +182,12 @@ fun TrafficDashboard(
                     modifier = Modifier
                         .size(38.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFF1F5F9))
+                        .background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Schedule,
                         contentDescription = strings.duration,
-                        tint = AppTextPrimary,
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -197,13 +197,13 @@ fun TrafficDashboard(
                 Column {
                     Text(
                         text = stats.formattedDuration(),
-                        color = AppTextPrimary,
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = strings.duration,
-                        color = AppTextSecondary,
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )
                 }

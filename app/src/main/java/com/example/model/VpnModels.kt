@@ -29,7 +29,7 @@ data class VpnServer(
 ) {
     fun getDisplayName(isArabic: Boolean, optimalLabel: String): String {
         if (isOptimal) return optimalLabel
-        return if (isArabic) countryAr else country
+        return if (isArabic && countryAr.isNotBlank()) countryAr else country
     }
 }
 

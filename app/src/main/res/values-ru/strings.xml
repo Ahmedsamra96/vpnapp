@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Ruvon VPN</string>
+    <string name="vpn_title">Ruvon VPN</string>
+    <string name="connect">Подключиться</string>
+    <string name="disconnect">Отключиться</string>
+    <string name="connecting">Подключение…</string>
+    <string name="connected">Подключено и защищено</string>
+    <string name="disconnected">Отключено</string>
+    <string name="optimal_location">Самый быстрый сервер (Авто)</string>
+    <string name="servers_title">VPN Серверы</string>
+    <string name="refresh_servers">Обновить</string>
+    <string name="download_speed">Загрузка</string>
+    <string name="upload_speed">Отдача</string>
+    <string name="ping">Пинг</string>
+    <string name="ip_address">IP-адрес</string>
+    <string name="duration">Длительность</string>
+    <string name="notification_channel_name">Статус подключения VPN</string>
+    <string name="notification_channel_desc">Уведомление о статусе подключения и скорости</string>
+    <string name="privacy_policy_title">Политика конфиденциальности</string>
+    <string name="data_safety_title">Безопасность данных</string>
+    <string name="vpn_disclosure_title">Раскрытие использования VPN</string>
+    <string name="app_permissions_title">Разрешения приложения</string>
+    <string name="choose_language_title">Выбрать язык</string>
+</resources>

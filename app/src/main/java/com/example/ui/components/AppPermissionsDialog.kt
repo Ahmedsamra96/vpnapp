@@ -70,20 +70,12 @@ import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun AppPermissionsDialog(
-    onRequestNotificationPermission: () -> Unit,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
     val strings = LocalAppStrings.current
 
-    val hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) == PackageManager.PERMISSION_GRANTED
-    } else {
-        true
-    }
+
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -167,34 +159,7 @@ fun AppPermissionsDialog(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Permission 2: Notifications
-                    PermissionCard(
-                        icon = Icons.Default.Notifications,
-                        name = strings.notifPermTitle,
-                        status = if (hasNotificationPermission) strings.notifPermGranted else strings.notifPermRequired,
-                        isGranted = hasNotificationPermission,
-                        description = strings.notifPermDesc,
-                        actionButton = if (!hasNotificationPermission) {
-                            {
-                                Button(
-                                    onClick = {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                            onRequestNotificationPermission()
-                                        } else {
-                                            openAppSettings(context)
-                                        }
-                                    },
-                                    shape = RoundedCornerShape(8.dp),
-                                    colors = ButtonDefaults.buttonColors(containerColor = VpnPrimaryBlue),
-                                    modifier = Modifier.height(36.dp)
-                                ) {
-                                    Text(strings.grantPermBtn, fontSize = 12.sp, color = Color.White)
-                                }
-                            }
-                        } else null
-                    )
 
-                    Spacer(modifier = Modifier.height(12.dp))
 
                     // Permission 3: Network Access
                     PermissionCard(

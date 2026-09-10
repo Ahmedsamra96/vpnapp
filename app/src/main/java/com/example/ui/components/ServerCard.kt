@@ -53,7 +53,7 @@ fun ServerCard(
     val isArabic = LocalAppLanguage.current == AppLanguage.ARABIC
     Card(
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+        colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
         modifier = modifier
             .fillMaxWidth()
             .testTag("selected_server_card")
@@ -64,7 +64,7 @@ fun ServerCard(
             )
             .border(
                 width = 1.dp,
-                color = AppBorderLight,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(18.dp)
             )
             .clickable(onClick = onClickChange)
@@ -85,8 +85,8 @@ fun ServerCard(
                     modifier = Modifier
                         .size(46.dp)
                         .clip(CircleShape)
-                        .background(AppSurfaceVariantLight)
-                        .border(1.dp, AppBorderLight, CircleShape)
+                        .background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
+                        .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, CircleShape)
                 ) {
                     Text(
                         text = server.flagEmoji,
@@ -99,13 +99,13 @@ fun ServerCard(
                 Column {
                     Text(
                         text = server.getDisplayName(isArabic, strings.optimalServer),
-                        color = AppTextPrimary,
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = if (server.isOptimal) strings.freeAndFastBadge else "${server.city} • ${server.pingMs} ms",
-                        color = AppTextSecondary,
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal
                     )
@@ -115,7 +115,7 @@ fun ServerCard(
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = null,
-                tint = AppTextMuted,
+                tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(15.dp)
             )
         }

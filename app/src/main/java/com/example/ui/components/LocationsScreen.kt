@@ -30,6 +30,7 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -77,7 +78,7 @@ fun LocationsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(AppBgLight)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 20.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -93,12 +94,12 @@ fun LocationsScreen(
                     text = strings.serversTitle,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AppTextPrimary
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = strings.serverCountFormat.format(servers.size),
                     fontSize = 13.sp,
-                    color = AppTextSecondary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -107,8 +108,8 @@ fun LocationsScreen(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(CircleShape)
-                    .background(AppSurfaceLight)
-                    .border(1.dp, AppBorderLight, CircleShape)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
@@ -120,7 +121,7 @@ fun LocationsScreen(
                     Icon(
                         imageVector = Icons.Default.Refresh,
                         contentDescription = strings.refreshServers,
-                        tint = AppTextPrimary,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -136,7 +137,7 @@ fun LocationsScreen(
             placeholder = {
                 Text(
                     text = strings.searchPlaceholder,
-                    color = AppTextMuted,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     fontSize = 14.sp
                 )
             },
@@ -144,7 +145,7 @@ fun LocationsScreen(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    tint = AppTextSecondary,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
             },
@@ -154,7 +155,7 @@ fun LocationsScreen(
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Clear search",
-                            tint = AppTextSecondary,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -162,10 +163,10 @@ fun LocationsScreen(
             },
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = AppSurfaceLight,
-                unfocusedContainerColor = AppSurfaceLight,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedBorderColor = VpnPrimaryBlue,
-                unfocusedBorderColor = AppBorderLight
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
             ),
             singleLine = true,
             modifier = Modifier
@@ -190,10 +191,10 @@ fun LocationsScreen(
                         .fillMaxWidth()
                         .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp), spotColor = Color(0x0A000000))
                         .clip(RoundedCornerShape(16.dp))
-                        .background(AppSurfaceLight)
+                        .background(MaterialTheme.colorScheme.surface)
                         .border(
                             width = if (isSelected) 1.5.dp else 1.dp,
-                            color = if (isSelected) VpnPrimaryBlue else AppBorderLight,
+                            color = if (isSelected) VpnPrimaryBlue else MaterialTheme.colorScheme.outline,
                             shape = RoundedCornerShape(16.dp)
                         )
                         .clickable {
@@ -212,7 +213,7 @@ fun LocationsScreen(
                             modifier = Modifier
                                 .size(42.dp)
                                 .clip(CircleShape)
-                                .background(AppSurfaceVariantLight)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                         ) {
                             Text(
                                 text = server.flagEmoji,
@@ -228,7 +229,7 @@ fun LocationsScreen(
                                     text = server.getDisplayName(isArabic, strings.optimalServer),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = AppTextPrimary
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 if (isSelected) {
                                     Spacer(modifier = Modifier.width(6.dp))
@@ -243,7 +244,7 @@ fun LocationsScreen(
                             Text(
                                 text = if (server.isOptimal) strings.freeAndFastBadge else "${server.city} (${server.ip})",
                                 fontSize = 12.sp,
-                                color = AppTextSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -256,7 +257,7 @@ fun LocationsScreen(
                             text = "${server.pingMs} ms",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
-                            color = AppTextSecondary
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
                         Spacer(modifier = Modifier.width(6.dp))
@@ -267,7 +268,7 @@ fun LocationsScreen(
                             tint = when {
                                 server.pingMs < 45 -> VpnConnectedGreen
                                 server.pingMs < 90 -> VpnAmber
-                                else -> AppTextMuted
+                                else -> MaterialTheme.colorScheme.onSurfaceVariant
                             },
                             modifier = Modifier.size(16.dp)
                         )
@@ -281,7 +282,7 @@ fun LocationsScreen(
                             Icon(
                                 imageVector = if (server.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
                                 contentDescription = strings.favoriteServerAction,
-                                tint = if (server.isFavorite) VpnAmber else AppTextMuted,
+                                tint = if (server.isFavorite) VpnAmber else MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -289,7 +290,7 @@ fun LocationsScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                             contentDescription = null,
-                            tint = AppTextMuted,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(12.dp)
                         )
                     }
@@ -297,7 +298,7 @@ fun LocationsScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

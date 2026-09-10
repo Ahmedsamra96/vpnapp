@@ -176,36 +176,18 @@ object OpenVpnAndroidService {
     private fun startTimeoutWatchdog(context: Context, attemptedServer: com.example.model.VpnServer) {
         connectionTimeoutJob?.cancel()
         connectionTimeoutJob = scope.launch {
-            delay(12000) // 12 seconds timeout threshold
+            delay(25000) // 25 seconds realistic threshold for OpenVPN TLS handshake
             if (isConnectingInProgress && currentEngineStatus != VpnState.Status.CONNECTED) {
-                Log.w(TAG, "Server connection timeout (12s) reached for server: ${attemptedServer.id} (${attemptedServer.ip})")
-                VpnStateRepository.addLog("[OpenVPN] Server (${attemptedServer.country}) timed out after 12 seconds...", LogLevel.WARNING)
-
-                val fallbackServer = getFallbackServer(attemptedServer.id)
-                if (fallbackServer != null && fallbackServer.id != attemptedServer.id) {
-                    VpnStateRepository.addLog("[OpenVPN] Auto-switching to high-speed alternative (${fallbackServer.country})...", LogLevel.INFO)
-                    VpnStateRepository.setSelectedServer(fallbackServer)
-                    try {
-                        vpnClient?.disconnect()
-                    } catch (_: Exception) {}
-                    delay(500)
-                    connectInternal(context, fallbackServer, isFailover = true)
-                } else {
-                    VpnStateRepository.addLog("[OpenVPN] Could not connect. Please choose another server or tap to retry.", LogLevel.ERROR)
-                    try {
-                        vpnClient?.disconnect()
-                    } catch (_: Exception) {}
-                    isConnectingInProgress = false
-                    activeServerId = null
-                    VpnStateRepository.setConnectionState(VpnConnectionState.DISCONNECTED)
-                }
+                Log.w(TAG, "Server connection timeout (25s) reached for server: ${attemptedServer.id} (${attemptedServer.ip})")
+                VpnStateRepository.addLog("[OpenVPN] Connection to ${attemptedServer.country} timed out. Tap connect to retry or select another server.", LogLevel.ERROR)
+                try {
+                    vpnClient?.disconnect()
+                } catch (_: Exception) {}
+                isConnectingInProgress = false
+                activeServerId = null
+                VpnStateRepository.setConnectionState(VpnConnectionState.DISCONNECTED)
             }
         }
-    }
-
-    private fun getFallbackServer(currentId: String?): com.example.model.VpnServer? {
-        val servers = DefaultServers.getDefaultServers()
-        return servers.firstOrNull { it.id != currentId && it.ovpnConfigBase64.isNotBlank() }
     }
 
     private fun sanitizeAndTuneOvpnConfig(rawConfig: String): String {

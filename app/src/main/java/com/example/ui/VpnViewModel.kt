@@ -35,6 +35,16 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = VpnGateRepository(application)
     private val prefs = application.getSharedPreferences("vpn_prefs", Context.MODE_PRIVATE)
 
+    private val _hasCompletedOnboarding = MutableStateFlow(
+        prefs.getBoolean("has_completed_onboarding", false)
+    )
+    val hasCompletedOnboarding: StateFlow<Boolean> = _hasCompletedOnboarding.asStateFlow()
+
+    fun completeOnboarding() {
+        prefs.edit().putBoolean("has_completed_onboarding", true).apply()
+        _hasCompletedOnboarding.value = true
+    }
+
     private val _hasAcceptedConsent = MutableStateFlow(
         prefs.getBoolean("has_accepted_vpn_consent", false)
     )
@@ -44,6 +54,20 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
         prefs.edit().putBoolean("has_accepted_vpn_consent", true).apply()
         _hasAcceptedConsent.value = true
         VpnStateRepository.addLog("VPN Service Disclosure and Privacy Policy accepted", LogLevel.INFO)
+    }
+
+    // Theme Mode Preference (Default is Dark mode)
+    private val _themeMode = MutableStateFlow(
+        com.example.model.AppThemeMode.fromCode(
+            prefs.getString("theme_mode", com.example.model.AppThemeMode.DARK.code) ?: com.example.model.AppThemeMode.DARK.code
+        )
+    )
+    val themeMode: StateFlow<com.example.model.AppThemeMode> = _themeMode.asStateFlow()
+
+    fun setThemeMode(mode: com.example.model.AppThemeMode) {
+        prefs.edit().putString("theme_mode", mode.code).apply()
+        _themeMode.value = mode
+        VpnStateRepository.addLog("App theme changed to: ${mode.name}", LogLevel.INFO)
     }
 
     // Language preference management

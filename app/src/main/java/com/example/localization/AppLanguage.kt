@@ -15,7 +15,10 @@ enum class AppLanguage(
     ARABIC("ar", "العربية", "Arabic", "🇸🇦", LayoutDirection.Rtl),
     ENGLISH("en", "English", "English", "🇺🇸", LayoutDirection.Ltr),
     FRENCH("fr", "Français", "French", "🇫🇷", LayoutDirection.Ltr),
-    SPANISH("es", "Español", "Spanish", "🇪🇸", LayoutDirection.Ltr);
+    SPANISH("es", "Español", "Spanish", "🇪🇸", LayoutDirection.Ltr),
+    PERSIAN("fa", "فارسی", "Persian", "🇮🇷", LayoutDirection.Rtl),
+    RUSSIAN("ru", "Русский", "Russian", "🇷🇺", LayoutDirection.Ltr),
+    GERMAN("de", "Deutsch", "German", "🇩🇪", LayoutDirection.Ltr);
 
     companion object {
         fun fromCode(code: String): AppLanguage {
@@ -25,6 +28,9 @@ enum class AppLanguage(
         /**
          * Resolves the effective active language.
          * If the user selected SYSTEM, it inspects the device/store language:
+         * Persian -> PERSIAN
+         * Russian -> RUSSIAN
+         * German -> GERMAN
          * French -> FRENCH
          * Spanish -> SPANISH
          * Arabic -> ARABIC
@@ -42,6 +48,9 @@ enum class AppLanguage(
 
             return when {
                 systemLanguage.startsWith("ar") -> ARABIC
+                systemLanguage.startsWith("fa") || systemLanguage.startsWith("per") -> PERSIAN
+                systemLanguage.startsWith("ru") -> RUSSIAN
+                systemLanguage.startsWith("de") -> GERMAN
                 systemLanguage.startsWith("fr") -> FRENCH
                 systemLanguage.startsWith("es") -> SPANISH
                 systemLanguage.startsWith("en") -> ENGLISH

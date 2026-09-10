@@ -80,6 +80,7 @@
         android:strokeColor="#5000F0FF" />
 
     <!-- Center Energy Core Shield Cutout -->
+    <!-- The striking signature Lightning Bolt from the user icon: electric cyan to neon mint-green gradient -->
     <path
         android:pathData="M54,22 L54,77 L51,75 L54,46 L42,54 L54,22 Z">
         <aapt:attr name="android:fillColor">
