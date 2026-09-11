@@ -114,7 +114,7 @@ fun OnboardingTourScreen(
                         .padding(20.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_ruvon_transparent),
+                        painter = painterResource(id = R.drawable.ic_ruvon_app),
                         contentDescription = "Shield Emblem",
                         modifier = Modifier.fillMaxSize()
                     )
