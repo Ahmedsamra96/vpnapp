@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -160,43 +161,13 @@ fun AppSplashScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp)
         ) {
-            // Main Animated Shield Icon container
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(130.dp)
-                    .scale(scale.value)
-                    .alpha(alpha.value)
-            ) {
-                // Outer glow shadow
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .shadow(
-                            elevation = 28.dp,
-                            shape = RoundedCornerShape(36.dp),
-                            spotColor = Color(0xFF00E5FF).copy(alpha = 0.45f),
-                            ambientColor = Color(0xFF2563EB).copy(alpha = 0.25f)
-                        )
-                        .clip(RoundedCornerShape(36.dp))
-                        .background(
-                            Brush.linearGradient(
-                                colors = if (isDark) {
-                                    listOf(Color(0xFF0F1E3D), Color(0xFF081226))
-                                } else {
-                                    listOf(Color(0xFFFFFFFF), Color(0xFFF0F7FF))
-                                }
-                            )
-                        )
-                        .padding(18.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_ruvon_app),
-                        contentDescription = "Ruvon VPN Icon",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
+            // Original supplied icon: no crop, mask, border, overlay, glow or container.
+            Image(
+                painter = painterResource(id = R.drawable.ic_ruvon_app),
+                contentDescription = "Ruvon VPN Icon",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(130.dp)
+            )
 
             Spacer(modifier = Modifier.height(28.dp))
 

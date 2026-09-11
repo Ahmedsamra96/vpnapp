@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -94,31 +95,13 @@ fun OnboardingTourScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Shield Emblem with Dark Container & Cyan/Blue Glow
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(116.dp)
-                        .shadow(
-                            elevation = 24.dp,
-                            shape = RoundedCornerShape(34.dp),
-                            spotColor = accentCyan.copy(alpha = 0.40f),
-                            ambientColor = accentBlue.copy(alpha = 0.25f)
-                        )
-                        .clip(RoundedCornerShape(34.dp))
-                        .background(
-                            Brush.linearGradient(
-                                colors = listOf(Color(0xFF0F1E3D), Color(0xFF081226))
-                            )
-                        )
-                        .padding(20.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_ruvon_app),
-                        contentDescription = "Shield Emblem",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                // Original supplied icon: displayed directly without visual alteration.
+                Image(
+                    painter = painterResource(id = R.drawable.ic_ruvon_app),
+                    contentDescription = "Ruvon VPN Icon",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.size(116.dp)
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
