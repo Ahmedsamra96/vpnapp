@@ -191,7 +191,7 @@ fun AppSplashScreen(
                         .padding(18.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_ruvon_transparent),
+                        painter = painterResource(id = R.drawable.ic_ruvon_app),
                         contentDescription = "Ruvon VPN Icon",
                         modifier = Modifier.fillMaxSize()
                     )
