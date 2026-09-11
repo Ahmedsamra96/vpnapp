@@ -31,12 +31,6 @@ android {
       keyAlias = "upload"
       keyPassword = System.getenv("KEY_PASSWORD")
     }
-    create("debugConfig") {
-      storeFile = file("${rootDir}/debug.keystore")
-      storePassword = "android"
-      keyAlias = "androiddebugkey"
-      keyPassword = "android"
-    }
   }
 
   buildTypes {
@@ -48,8 +42,8 @@ android {
       manifestPlaceholders["admobAppId"] = "ca-app-pub-7820157448660134~1504861739"
     }
     debug {
-      signingConfig = signingConfigs.getByName("debugConfig")
-      // In Debug / development, use official Google test app ID to keep your account safe
+      // Use Android's standard automatically generated debug keystore.
+      // In Debug / development, use official Google test app ID to keep your account safe.
       manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
     }
   }
