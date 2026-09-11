@@ -43,7 +43,7 @@ fun AppBrandLogo(
     contentDescription: String? = "Ruvon VPN Logo"
 ) {
     val isDark = MaterialTheme.colorScheme.surface.luminance() < 0.5f
-    val logoDrawableId = R.drawable.ic_ruvon_transparent
+    val logoDrawableId = R.drawable.ic_ruvon_app
 
     val infiniteTransition = rememberInfiniteTransition(label = "logo_glow")
     val glowAlpha by infiniteTransition.animateFloat(
