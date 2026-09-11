@@ -3,8 +3,8 @@ name: Build Debug APK
 on:
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/build-debug-apk.yml'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
