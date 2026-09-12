@@ -95,12 +95,14 @@ fun OnboardingTourScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Original supplied icon: displayed directly without visual alteration.
+                // Original supplied icon; only the outer corners are rounded.
                 Image(
                     painter = painterResource(id = R.drawable.ic_ruvon_app),
                     contentDescription = "Ruvon VPN Icon",
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(116.dp)
+                    modifier = Modifier
+                        .size(116.dp)
+                        .clip(RoundedCornerShape(percent = 22))
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
