@@ -161,12 +161,14 @@ fun AppSplashScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp)
         ) {
-            // Original supplied icon: no crop, mask, border, overlay, glow or container.
+            // Original supplied icon; only the outer corners are rounded.
             Image(
                 painter = painterResource(id = R.drawable.ic_ruvon_app),
                 contentDescription = "Ruvon VPN Icon",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.size(130.dp)
+                modifier = Modifier
+                    .size(130.dp)
+                    .clip(RoundedCornerShape(percent = 22))
             )
 
             Spacer(modifier = Modifier.height(28.dp))
