@@ -28,6 +28,6 @@ fun AppBrandLogo(
         contentScale = ContentScale.Fit,
         modifier = modifier
             .size(size)
-            .clip(RoundedCornerShape(percent = 22))
+            .clip(RoundedCornerShape(percent = 30))
     )
 }
