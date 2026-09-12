@@ -28,6 +28,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,14 +50,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.localization.AppLanguage
 import com.example.localization.LocalAppStrings
-import com.example.ui.theme.AppBgLight
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppTextMuted
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnPrimaryBlue
-import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun LanguageSelectDialog(
@@ -73,11 +68,11 @@ fun LanguageSelectDialog(
     ) {
         Surface(
             shape = RoundedCornerShape(26.dp),
-            color = AppBgLight,
+            color = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .fillMaxWidth(0.92f)
                 .shadow(20.dp, RoundedCornerShape(26.dp))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(26.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(26.dp))
                 .testTag("language_select_dialog")
         ) {
             Column(
@@ -91,7 +86,7 @@ fun LanguageSelectDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(AppSurfaceLight)
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(horizontal = 20.dp, vertical = 16.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -100,12 +95,12 @@ fun LanguageSelectDialog(
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(CircleShape)
-                                .background(VpnPrimaryBlueSoft)
+                                .background(ThemeColors.primarySoft)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Language,
                                 contentDescription = null,
-                                tint = VpnPrimaryBlue,
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(22.dp)
                             )
                         }
@@ -115,12 +110,12 @@ fun LanguageSelectDialog(
                                 text = strings.chooseLanguageTitle,
                                 fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = AppTextPrimary
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = strings.chooseLanguageSubtitle,
                                 fontSize = 12.sp,
-                                color = AppTextSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -129,12 +124,12 @@ fun LanguageSelectDialog(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = strings.closeBtn,
-                            tint = AppTextSecondary
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                HorizontalDivider(color = AppBorderLight)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                 Column(modifier = Modifier.padding(20.dp)) {
                     // List of language options
@@ -208,7 +203,7 @@ fun LanguageSelectDialog(
                             onDismiss()
                         },
                         shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = VpnPrimaryBlue),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -234,7 +229,7 @@ fun LanguageSelectDialog(
                         Text(
                             text = strings.cancelBtn,
                             fontSize = 14.sp,
-                            color = AppTextSecondary
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -259,14 +254,14 @@ private fun LanguageChoiceCard(
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) VpnPrimaryBlueSoft else AppSurfaceLight
+            containerColor = if (isSelected) ThemeColors.primarySoft else MaterialTheme.colorScheme.surface
         ),
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .border(
                 width = if (isSelected) 1.5.dp else 1.dp,
-                color = if (isSelected) VpnPrimaryBlue else AppBorderLight,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable(onClick = onSelect)
@@ -290,12 +285,12 @@ private fun LanguageChoiceCard(
                         text = option.nativeName,
                         fontSize = 15.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                        color = if (isSelected) VpnPrimaryBlue else AppTextPrimary
+                        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = option.secondaryName,
                         fontSize = 12.sp,
-                        color = AppTextSecondary
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -306,7 +301,7 @@ private fun LanguageChoiceCard(
                     modifier = Modifier
                         .size(26.dp)
                         .clip(CircleShape)
-                        .background(VpnPrimaryBlue)
+                        .background(MaterialTheme.colorScheme.primary)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
@@ -320,7 +315,7 @@ private fun LanguageChoiceCard(
                     modifier = Modifier
                         .size(24.dp)
                         .clip(CircleShape)
-                        .border(1.5.dp, AppTextMuted, CircleShape)
+                        .border(1.5.dp, MaterialTheme.colorScheme.outline, CircleShape)
                 )
             }
         }

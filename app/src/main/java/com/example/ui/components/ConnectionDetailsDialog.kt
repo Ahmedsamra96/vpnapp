@@ -18,12 +18,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,16 +44,10 @@ import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
 import com.example.model.VpnServer
 import com.example.model.VpnTrafficStats
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
-import com.example.ui.theme.AppTextMuted
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnConnectedGreenSoft
 import com.example.ui.theme.VpnPrimaryBlue
-import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun ConnectionDetailsDialog(
@@ -71,10 +65,11 @@ fun ConnectionDetailsDialog(
     ) {
         Card(
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth(0.92f)
                 .shadow(elevation = 16.dp, shape = RoundedCornerShape(24.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(24.dp))
                 .testTag("connection_details_dialog")
         ) {
             Column(
@@ -92,7 +87,7 @@ fun ConnectionDetailsDialog(
                         text = strings.connectionDetailsTitle,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = AppTextPrimary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     IconButton(
@@ -100,12 +95,12 @@ fun ConnectionDetailsDialog(
                         modifier = Modifier
                             .size(34.dp)
                             .clip(CircleShape)
-                            .background(AppSurfaceVariantLight)
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = strings.closeBtn,
-                            tint = AppTextSecondary,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -116,10 +111,10 @@ fun ConnectionDetailsDialog(
                 // Server status card
                 Card(
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFF8FAFC)),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, AppBorderLight, RoundedCornerShape(16.dp))
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -134,8 +129,8 @@ fun ConnectionDetailsDialog(
                                 modifier = Modifier
                                     .size(44.dp)
                                     .clip(CircleShape)
-                                    .background(AppSurfaceLight)
-                                    .border(1.dp, AppBorderLight, CircleShape)
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                             ) {
                                 Text(text = server.flagEmoji, fontSize = 22.sp)
                             }
@@ -147,12 +142,12 @@ fun ConnectionDetailsDialog(
                                     text = server.getDisplayName(isArabic, strings.optimalServer),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = AppTextPrimary
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
                                     text = server.city,
                                     fontSize = 13.sp,
-                                    color = AppTextSecondary
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -174,7 +169,7 @@ fun ConnectionDetailsDialog(
                                 Spacer(modifier = Modifier.width(5.dp))
                                 Text(
                                     text = strings.statusConnected,
-                                    color = VpnConnectedGreen,
+                                    color = Color(0xFF15803D),
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -190,20 +185,20 @@ fun ConnectionDetailsDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color(0xFFF8FAFC))
-                        .border(1.dp, AppBorderLight, RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     DetailRow(label = strings.ipAddress, value = server.ip)
-                    HorizontalDivider(color = AppBorderLight)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                     DetailRow(label = strings.protocolTitle, value = "OpenVPN ${server.protocol}")
-                    HorizontalDivider(color = AppBorderLight)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                     DetailRow(label = strings.duration, value = trafficStats.formattedDuration())
-                    HorizontalDivider(color = AppBorderLight)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                     DetailRow(label = "${strings.download} / ${strings.upload}", value = "${trafficStats.formattedDownloaded()} ↓ / ${trafficStats.formattedUploaded()} ↑")
-                    HorizontalDivider(color = AppBorderLight)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                     DetailRow(label = strings.ping, value = "${server.pingMs} ms")
-                    HorizontalDivider(color = AppBorderLight)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                     DetailRow(label = strings.privacySecurityTitle, value = "AES-256-GCM")
                 }
 
@@ -212,8 +207,10 @@ fun ConnectionDetailsDialog(
                 // Security card
                 Card(
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = VpnPrimaryBlueSoft),
-                    modifier = Modifier.fillMaxWidth()
+                    colors = CardDefaults.cardColors(containerColor = ThemeColors.primarySoft),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, ThemeColors.primarySoftBorder, RoundedCornerShape(16.dp))
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -232,12 +229,12 @@ fun ConnectionDetailsDialog(
                                 text = strings.secureFeatureTitle,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = VpnPrimaryBlue
+                                color = MaterialTheme.colorScheme.primary
                             )
                             Text(
                                 text = strings.secureFeatureSubtitle,
                                 fontSize = 12.sp,
-                                color = AppTextSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -248,7 +245,7 @@ fun ConnectionDetailsDialog(
                 Text(
                     text = strings.privacyVerifiedBadgeSubtitle,
                     fontSize = 12.sp,
-                    color = AppTextMuted,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -272,13 +269,13 @@ private fun DetailRow(
         Text(
             text = label,
             fontSize = 13.sp,
-            color = AppTextSecondary
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
             text = value,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
-            color = AppTextPrimary
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

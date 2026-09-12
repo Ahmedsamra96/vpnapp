@@ -33,6 +33,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,14 +50,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.localization.LocalAppStrings
-import com.example.ui.theme.AppBgLight
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnPrimaryBlue
-import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun PrivacyPolicyDialog(
@@ -70,12 +66,12 @@ fun PrivacyPolicyDialog(
     ) {
         Surface(
             shape = RoundedCornerShape(24.dp),
-            color = AppBgLight,
+            color = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .fillMaxWidth(0.95f)
                 .fillMaxSize(0.92f)
                 .shadow(20.dp, RoundedCornerShape(24.dp))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(24.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(24.dp))
                 .testTag("privacy_policy_dialog")
         ) {
             Column(
@@ -87,7 +83,7 @@ fun PrivacyPolicyDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(AppSurfaceLight)
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(horizontal = 18.dp, vertical = 14.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -102,12 +98,12 @@ fun PrivacyPolicyDialog(
                                 text = strings.privacyPolicyTitle,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = AppTextPrimary
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = strings.privacyPolicySubtitle,
                                 fontSize = 12.sp,
-                                color = AppTextSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -119,12 +115,12 @@ fun PrivacyPolicyDialog(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = strings.closeBtn,
-                            tint = AppTextSecondary
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                HorizontalDivider(color = AppBorderLight)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                 // Scrollable Content
                 Column(
@@ -136,10 +132,10 @@ fun PrivacyPolicyDialog(
                     // Verified Badge
                     Card(
                         shape = RoundedCornerShape(14.dp),
-                        colors = CardDefaults.cardColors(containerColor = VpnConnectedGreen.copy(alpha = 0.08f)),
+                        colors = CardDefaults.cardColors(containerColor = VpnConnectedGreen.copy(alpha = 0.12f)),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .border(1.dp, VpnConnectedGreen.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
+                            .border(1.dp, VpnConnectedGreen.copy(alpha = 0.3f), RoundedCornerShape(14.dp))
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -162,7 +158,7 @@ fun PrivacyPolicyDialog(
                                 Text(
                                     text = strings.privacyVerifiedBadgeSubtitle,
                                     fontSize = 11.5.sp,
-                                    color = AppTextSecondary,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     lineHeight = 16.sp
                                 )
                             }
@@ -222,17 +218,17 @@ fun PrivacyPolicyDialog(
 
                 // Bottom Action
                 Surface(
-                    color = AppSurfaceLight,
+                    color = MaterialTheme.colorScheme.surface,
                     tonalElevation = 4.dp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, AppBorderLight)
+                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                         .padding(16.dp)
                 ) {
                     Button(
                         onClick = onDismiss,
                         shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = VpnPrimaryBlue),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp)
@@ -259,10 +255,10 @@ private fun PolicySectionCard(
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, AppBorderLight, RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -273,12 +269,12 @@ private fun PolicySectionCard(
                     modifier = Modifier
                         .size(34.dp)
                         .clip(CircleShape)
-                        .background(VpnPrimaryBlueSoft)
+                        .background(ThemeColors.primarySoft)
                 ) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = VpnPrimaryBlue,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -287,7 +283,7 @@ private fun PolicySectionCard(
                     text = title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AppTextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -297,7 +293,7 @@ private fun PolicySectionCard(
             Text(
                 text = content,
                 fontSize = 12.5.sp,
-                color = AppTextSecondary,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 19.sp
             )
         }

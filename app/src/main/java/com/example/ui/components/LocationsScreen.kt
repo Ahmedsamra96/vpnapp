@@ -51,13 +51,6 @@ import com.example.localization.LocalAppLanguage
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnServer
 import com.example.ui.VpnViewModel
-import com.example.ui.theme.AppBgLight
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
-import com.example.ui.theme.AppTextMuted
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
 import com.example.ui.theme.VpnAmber
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnPrimaryBlue

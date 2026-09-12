@@ -18,15 +18,19 @@ import com.google.android.gms.ads.AdView
 
 /**
  * Large, seamless AdMob Banner placed firmly at the bottom of the screen.
- * - No top "ADVERTISEMENT" text or labels (clean aesthetic requested by user)
- * - Uses large/adaptive height (up to 60-90dp) ensuring prominent visibility
- * - Placed across all main screens at the bottom
+ * - In DEBUG mode: If ads are disabled, nothing is rendered (clean, empty view).
+ * - In RELEASE mode: Loads the real production AdMob banner.
  */
 @Composable
 fun AdMobBannerView(
     modifier: Modifier = Modifier,
     adUnitId: String = AdMobManager.BANNER_AD_UNIT_ID
 ) {
+    if (!AdMobManager.areAdsEnabled || adUnitId.isBlank()) {
+        // Completely hidden and removed in Debug builds
+        return
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -37,7 +41,6 @@ fun AdMobBannerView(
         AndroidView(
             factory = { context ->
                 AdView(context).apply {
-                    // Use large banner (320x100) or standard full width banner
                     setAdSize(AdSize.LARGE_BANNER)
                     this.adUnitId = adUnitId
                     loadAd(AdRequest.Builder().build())

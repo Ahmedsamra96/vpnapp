@@ -38,6 +38,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -57,16 +58,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import com.example.localization.LocalAppStrings
-import com.example.ui.theme.AppBgLight
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnAmber
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnConnectedGreenSoft
 import com.example.ui.theme.VpnPrimaryBlue
-import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun AppPermissionsDialog(
@@ -75,19 +71,17 @@ fun AppPermissionsDialog(
     val context = LocalContext.current
     val strings = LocalAppStrings.current
 
-
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
             shape = RoundedCornerShape(24.dp),
-            color = AppBgLight,
+            color = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .fillMaxWidth(0.92f)
                 .shadow(20.dp, RoundedCornerShape(24.dp))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(24.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(24.dp))
                 .testTag("app_permissions_dialog")
         ) {
             Column(
@@ -101,7 +95,7 @@ fun AppPermissionsDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(AppSurfaceLight)
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(horizontal = 18.dp, vertical = 14.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -116,12 +110,12 @@ fun AppPermissionsDialog(
                                 text = strings.permissionsHeader,
                                 fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = AppTextPrimary
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = strings.permissionsSubheader,
                                 fontSize = 12.sp,
-                                color = AppTextSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -130,18 +124,18 @@ fun AppPermissionsDialog(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = strings.closeBtn,
-                            tint = AppTextSecondary
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                HorizontalDivider(color = AppBorderLight)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
                         text = strings.permissionsIntro,
                         fontSize = 12.5.sp,
-                        color = AppTextSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 18.sp
                     )
 
@@ -158,8 +152,6 @@ fun AppPermissionsDialog(
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
-
-
 
                     // Permission 3: Network Access
                     PermissionCard(
@@ -185,14 +177,14 @@ fun AppPermissionsDialog(
                             imageVector = Icons.Default.OpenInNew,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
-                            tint = AppTextPrimary
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = strings.openSettingsBtn,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
-                            color = AppTextPrimary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -222,10 +214,10 @@ private fun PermissionCard(
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, AppBorderLight, RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(
@@ -242,7 +234,7 @@ private fun PermissionCard(
                         modifier = Modifier
                             .size(34.dp)
                             .clip(CircleShape)
-                            .background(if (isGranted) VpnConnectedGreenSoft else VpnAmber.copy(alpha = 0.15f))
+                            .background(if (isGranted) VpnConnectedGreen.copy(alpha = 0.15f) else VpnAmber.copy(alpha = 0.15f))
                     ) {
                         Icon(
                             imageVector = icon,
@@ -257,7 +249,7 @@ private fun PermissionCard(
                             text = name,
                             fontSize = 13.5.sp,
                             fontWeight = FontWeight.Bold,
-                            color = AppTextPrimary
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = status,
@@ -282,7 +274,7 @@ private fun PermissionCard(
             Text(
                 text = description,
                 fontSize = 11.5.sp,
-                color = AppTextSecondary,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 16.sp
             )
 

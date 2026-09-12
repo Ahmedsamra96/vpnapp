@@ -42,19 +42,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppTextMuted
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
 import com.example.localization.AppLanguage
 import com.example.localization.LocalAppLanguage
 import com.example.model.VpnServer
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnDisconnectedRed
 import com.example.ui.theme.VpnPrimaryBlue
 import com.example.ui.theme.VpnPrimaryBlueDark
 import com.example.ui.theme.VpnPrimaryBlueLight
-import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun VpnPowerButton(
@@ -122,13 +118,13 @@ fun VpnPowerButton(
             }
 
             val ring1Color = if (isConnected) {
-                Color(0xFFDBEAFE)
+                if (ThemeColors.isDark) Color(0xFF1E3A8A).copy(alpha = 0.4f) else Color(0xFFDBEAFE)
             } else {
                 androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
             }
 
             val ring2Color = if (isConnected) {
-                Color(0xFFBFDBFE)
+                if (ThemeColors.isDark) Color(0xFF2563EB).copy(alpha = 0.3f) else Color(0xFFBFDBFE)
             } else {
                 androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
             }

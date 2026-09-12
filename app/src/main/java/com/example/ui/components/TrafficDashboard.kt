@@ -36,12 +36,8 @@ import androidx.compose.ui.unit.sp
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
 import com.example.model.VpnTrafficStats
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnPrimaryBlue
-import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun TrafficDashboard(
@@ -84,7 +80,7 @@ fun TrafficDashboard(
                         modifier = Modifier
                             .size(38.dp)
                             .clip(CircleShape)
-                            .background(VpnPrimaryBlueSoft)
+                            .background(ThemeColors.primarySoft)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowDownward,
@@ -130,7 +126,7 @@ fun TrafficDashboard(
                         modifier = Modifier
                             .size(38.dp)
                             .clip(CircleShape)
-                            .background(VpnPrimaryBlueSoft)
+                            .background(ThemeColors.primarySoft)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowUpward,

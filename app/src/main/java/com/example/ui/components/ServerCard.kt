@@ -35,12 +35,6 @@ import com.example.localization.LocalAppLanguage
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
 import com.example.model.VpnServer
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
-import com.example.ui.theme.AppTextMuted
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
 
 @Composable
 fun ServerCard(

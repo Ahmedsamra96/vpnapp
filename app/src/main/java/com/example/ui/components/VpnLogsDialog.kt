@@ -45,16 +45,11 @@ import androidx.compose.ui.window.Dialog
 import com.example.localization.LocalAppStrings
 import com.example.model.LogLevel
 import com.example.model.VpnLogEntry
-import com.example.ui.theme.CyberAmber
-import com.example.ui.theme.CyberBackground
-import com.example.ui.theme.CyberBorder
-import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.CyberEmerald
-import com.example.ui.theme.CyberRed
-import com.example.ui.theme.CyberSurface
-import com.example.ui.theme.TextMuted
-import com.example.ui.theme.TextPrimary
-import com.example.ui.theme.TextSecondary
+import com.example.ui.theme.ThemeColors
+import com.example.ui.theme.VpnAmber
+import com.example.ui.theme.VpnConnectedGreen
+import com.example.ui.theme.VpnDisconnectedRed
+import com.example.ui.theme.VpnPrimaryBlue
 import com.example.vpn.VpnStateRepository
 
 @Composable
@@ -75,11 +70,11 @@ fun VpnLogsDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = CyberBackground),
+            colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(480.dp)
-                .border(1.dp, CyberBorder, RoundedCornerShape(20.dp))
+                .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
         ) {
             Column(
                 modifier = Modifier
@@ -96,13 +91,13 @@ fun VpnLogsDialog(
                         Icon(
                             imageVector = Icons.Default.Terminal,
                             contentDescription = null,
-                            tint = CyberCyan,
+                            tint = VpnPrimaryBlue,
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = strings.logsDialogTitle,
-                            color = TextPrimary,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -115,15 +110,27 @@ fun VpnLogsDialog(
                             clipboard.setPrimaryClip(ClipData.newPlainText("VPN Logs", text))
                             Toast.makeText(context, strings.logCopiedToClipboard, Toast.LENGTH_SHORT).show()
                         }) {
-                            Icon(Icons.Default.ContentCopy, contentDescription = strings.copyButton, tint = TextSecondary)
+                            Icon(
+                                Icons.Default.ContentCopy,
+                                contentDescription = strings.copyButton,
+                                tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
 
                         IconButton(onClick = { VpnStateRepository.clearLogs() }) {
-                            Icon(Icons.Default.DeleteOutline, contentDescription = strings.clearButton, tint = TextSecondary)
+                            Icon(
+                                Icons.Default.DeleteOutline,
+                                contentDescription = strings.clearButton,
+                                tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
 
                         IconButton(onClick = onDismiss) {
-                            Icon(Icons.Default.Close, contentDescription = strings.closeBtn, tint = TextSecondary)
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = strings.closeBtn,
+                                tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     }
                 }
@@ -131,19 +138,20 @@ fun VpnLogsDialog(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // Terminal Box
+                val terminalBg = if (ThemeColors.isDark) Color(0xFF070E24) else Color(0xFF0F172A)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(CyberSurface)
-                        .border(1.dp, CyberBorder, RoundedCornerShape(12.dp))
+                        .background(terminalBg)
+                        .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
                         .padding(10.dp)
                 ) {
                     if (logs.isEmpty()) {
                         Text(
                             text = strings.noLogsAvailable,
-                            color = TextMuted,
+                            color = Color(0xFF64748B),
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.align(Alignment.Center)
@@ -155,16 +163,16 @@ fun VpnLogsDialog(
                         ) {
                             items(logs) { entry ->
                                 val logColor = when (entry.level) {
-                                    LogLevel.SUCCESS -> CyberEmerald
-                                    LogLevel.WARNING -> CyberAmber
-                                    LogLevel.ERROR -> CyberRed
-                                    LogLevel.INFO -> CyberCyan
+                                    LogLevel.SUCCESS -> Color(0xFF4ADE80)
+                                    LogLevel.WARNING -> Color(0xFFFBBF24)
+                                    LogLevel.ERROR -> Color(0xFFF87171)
+                                    LogLevel.INFO -> Color(0xFF38BDF8)
                                 }
 
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     Text(
                                         text = "[${entry.timestamp}] ",
-                                        color = TextMuted,
+                                        color = Color(0xFF94A3B8),
                                         fontSize = 11.sp,
                                         fontFamily = FontFamily.Monospace
                                     )

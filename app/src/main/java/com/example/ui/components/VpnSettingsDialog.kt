@@ -49,14 +49,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnAppSettings
-import com.example.ui.theme.CyberBackground
-import com.example.ui.theme.CyberBorder
-import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.CyberEmerald
-import com.example.ui.theme.CyberSurface
-import com.example.ui.theme.TextMuted
-import com.example.ui.theme.TextPrimary
-import com.example.ui.theme.TextSecondary
+import com.example.ui.theme.ThemeColors
+import com.example.ui.theme.VpnConnectedGreen
+import com.example.ui.theme.VpnPrimaryBlue
 
 @Composable
 fun VpnSettingsDialog(
@@ -75,10 +70,10 @@ fun VpnSettingsDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = CyberBackground),
+            colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, CyberBorder, RoundedCornerShape(20.dp))
+                .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
         ) {
             Column(
                 modifier = Modifier
@@ -96,20 +91,24 @@ fun VpnSettingsDialog(
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = null,
-                            tint = CyberCyan,
+                            tint = VpnPrimaryBlue,
                             modifier = Modifier.size(22.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = strings.securityProtocolSettingsTitle,
-                            color = TextPrimary,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
 
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.Default.Close, contentDescription = strings.closeBtn, tint = TextSecondary)
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = strings.closeBtn,
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
 
@@ -140,7 +139,7 @@ fun VpnSettingsDialog(
                 // Protocol Selector
                 Text(
                     text = strings.protocolTitle,
-                    color = TextPrimary,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -152,15 +151,15 @@ fun VpnSettingsDialog(
                         onClick = { onSetProtocol("UDP") },
                         label = { Text(strings.udpFastLabel) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = CyberCyan.copy(alpha = 0.2f),
-                            selectedLabelColor = CyberCyan,
-                            containerColor = CyberSurface,
-                            labelColor = TextSecondary
+                            selectedContainerColor = VpnPrimaryBlue.copy(alpha = 0.15f),
+                            selectedLabelColor = VpnPrimaryBlue,
+                            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant,
+                            labelColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         border = FilterChipDefaults.filterChipBorder(
                             enabled = true,
                             selected = settings.preferredProtocol == "UDP",
-                            borderColor = if (settings.preferredProtocol == "UDP") CyberCyan else CyberBorder
+                            borderColor = if (settings.preferredProtocol == "UDP") VpnPrimaryBlue else androidx.compose.material3.MaterialTheme.colorScheme.outline
                         )
                     )
 
@@ -169,15 +168,15 @@ fun VpnSettingsDialog(
                         onClick = { onSetProtocol("TCP") },
                         label = { Text(strings.tcpStableLabel) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = CyberCyan.copy(alpha = 0.2f),
-                            selectedLabelColor = CyberCyan,
-                            containerColor = CyberSurface,
-                            labelColor = TextSecondary
+                            selectedContainerColor = VpnPrimaryBlue.copy(alpha = 0.15f),
+                            selectedLabelColor = VpnPrimaryBlue,
+                            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant,
+                            labelColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         border = FilterChipDefaults.filterChipBorder(
                             enabled = true,
                             selected = settings.preferredProtocol == "TCP",
-                            borderColor = if (settings.preferredProtocol == "TCP") CyberCyan else CyberBorder
+                            borderColor = if (settings.preferredProtocol == "TCP") VpnPrimaryBlue else androidx.compose.material3.MaterialTheme.colorScheme.outline
                         )
                     )
                 }
@@ -188,27 +187,31 @@ fun VpnSettingsDialog(
                 if (!showImportField) {
                     Button(
                         onClick = { showImportField = true },
-                        colors = ButtonDefaults.buttonColors(containerColor = CyberSurface),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, CyberBorder),
+                        colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth().testTag("open_import_config_button")
                     ) {
-                        Icon(Icons.Default.FileUpload, contentDescription = null, tint = CyberCyan)
+                        Icon(Icons.Default.FileUpload, contentDescription = null, tint = VpnPrimaryBlue)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(strings.customConfigImportTitle, color = TextPrimary, fontSize = 13.sp)
+                        Text(
+                            strings.customConfigImportTitle,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
+                            fontSize = 13.sp
+                        )
                     }
                 } else {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(14.dp))
-                            .background(CyberSurface)
-                            .border(1.dp, CyberBorder, RoundedCornerShape(14.dp))
+                            .background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
                             .padding(14.dp)
                     ) {
                         Text(
                             text = strings.customConfigTitle,
-                            color = CyberCyan,
+                            color = VpnPrimaryBlue,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -217,13 +220,19 @@ fun VpnSettingsDialog(
                         OutlinedTextField(
                             value = configName,
                             onValueChange = { configName = it },
-                            placeholder = { Text(strings.customConfigNamePlaceholder, color = TextMuted, fontSize = 12.sp) },
+                            placeholder = {
+                                Text(
+                                    strings.customConfigNamePlaceholder,
+                                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                    fontSize = 12.sp
+                                )
+                            },
                             singleLine = true,
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedTextColor = TextPrimary,
-                                unfocusedTextColor = TextPrimary,
-                                focusedBorderColor = CyberCyan,
-                                unfocusedBorderColor = CyberBorder
+                                focusedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
+                                unfocusedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
+                                focusedBorderColor = VpnPrimaryBlue,
+                                unfocusedBorderColor = androidx.compose.material3.MaterialTheme.colorScheme.outline
                             ),
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -233,14 +242,20 @@ fun VpnSettingsDialog(
                         OutlinedTextField(
                             value = configText,
                             onValueChange = { configText = it },
-                            placeholder = { Text(strings.customConfigContentPlaceholder, color = TextMuted, fontSize = 12.sp) },
+                            placeholder = {
+                                Text(
+                                    strings.customConfigContentPlaceholder,
+                                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                    fontSize = 12.sp
+                                )
+                            },
                             minLines = 3,
                             maxLines = 5,
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedTextColor = TextPrimary,
-                                unfocusedTextColor = TextPrimary,
-                                focusedBorderColor = CyberCyan,
-                                unfocusedBorderColor = CyberBorder
+                                focusedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
+                                unfocusedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
+                                focusedBorderColor = VpnPrimaryBlue,
+                                unfocusedBorderColor = androidx.compose.material3.MaterialTheme.colorScheme.outline
                             ),
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -255,7 +270,10 @@ fun VpnSettingsDialog(
                                 onClick = { showImportField = false },
                                 colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.ui.graphics.Color.Transparent)
                             ) {
-                                Text(strings.cancelBtn, color = TextSecondary)
+                                Text(
+                                    strings.cancelBtn,
+                                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             Button(
@@ -266,10 +284,10 @@ fun VpnSettingsDialog(
                                         onDismiss()
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = CyberCyan),
+                                colors = ButtonDefaults.buttonColors(containerColor = VpnPrimaryBlue),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
-                                Text(strings.saveAndUseBtn, color = androidx.compose.ui.graphics.Color.Black, fontWeight = FontWeight.Bold)
+                                Text(strings.saveAndUseBtn, color = androidx.compose.ui.graphics.Color.White, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -283,19 +301,19 @@ fun VpnSettingsDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
-                        .background(CyberEmerald.copy(alpha = 0.1f))
+                        .background(VpnConnectedGreen.copy(alpha = 0.1f))
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.GppGood,
                         contentDescription = null,
-                        tint = CyberEmerald,
+                        tint = VpnConnectedGreen,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = strings.freeGuaranteeBadge,
-                        color = CyberEmerald,
+                        color = VpnConnectedGreen,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -319,8 +337,8 @@ private fun SettingToggleRow(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(CyberSurface)
-            .border(1.dp, CyberBorder, RoundedCornerShape(14.dp))
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
+            .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
             .padding(14.dp)
     ) {
         Row(
@@ -330,21 +348,21 @@ private fun SettingToggleRow(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = CyberCyan,
+                tint = VpnPrimaryBlue,
                 modifier = Modifier.size(22.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
                     text = title,
-                    color = TextPrimary,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = subtitle,
-                    color = TextSecondary,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp,
                     lineHeight = 15.sp
                 )
@@ -357,10 +375,10 @@ private fun SettingToggleRow(
             checked = checked,
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = androidx.compose.ui.graphics.Color.Black,
-                checkedTrackColor = CyberCyan,
-                uncheckedThumbColor = TextMuted,
-                uncheckedTrackColor = CyberBorder
+                checkedThumbColor = androidx.compose.ui.graphics.Color.White,
+                checkedTrackColor = VpnPrimaryBlue,
+                uncheckedThumbColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
+                uncheckedTrackColor = androidx.compose.material3.MaterialTheme.colorScheme.outline
             )
         )
     }

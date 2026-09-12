@@ -63,7 +63,6 @@ import com.example.localization.LocalAppStrings
 import com.example.model.VpnConnectionState
 import com.example.ui.components.AppBrandLogo
 import com.example.ui.components.AppPermissionsDialog
-import com.example.ui.components.AppSplashScreen
 import com.example.ui.components.ConnectionDetailsDialog
 import com.example.ui.components.DataUsageDialog
 import com.example.ui.components.LanguageSelectDialog
@@ -73,15 +72,10 @@ import com.example.ui.components.PrivacyPolicyDialog
 import com.example.ui.components.ProminentDisclosureDialog
 import com.example.ui.components.ServerCard
 import com.example.ui.components.SettingsScreen
+import com.example.ui.components.SplashScreen
 import com.example.ui.components.TrafficDashboard
 import com.example.ui.components.VpnPowerButton
 import com.example.ui.components.WelcomeOnboardingDialog
-import com.example.ui.theme.AppBgLight
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnPrimaryBlue
 import com.example.ui.theme.VpnPrimaryBlueSoft
@@ -109,6 +103,7 @@ fun VpnMainScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var showSplashScreen by remember { mutableStateOf(true) }
     var showConnectionDetails by remember { mutableStateOf(false) }
     var showOnboardingDialog by remember { mutableStateOf(false) }
     var showPrivacyPolicyDialog by remember { mutableStateOf(false) }
@@ -129,7 +124,13 @@ fun VpnMainScreen(
         LocalAppLanguage provides effectiveLanguage,
         LocalAppStrings provides strings
     ) {
-        if (!hasCompletedOnboarding) {
+        if (showSplashScreen) {
+            SplashScreen(
+                onSplashFinished = {
+                    showSplashScreen = false
+                }
+            )
+        } else if (!hasCompletedOnboarding) {
             OnboardingTourScreen(
                 onContinue = {
                     viewModel.completeOnboarding()
@@ -530,7 +531,7 @@ private fun FeatureBadgeRow(
             modifier = Modifier
                 .size(30.dp)
                 .clip(CircleShape)
-                .background(AppSurfaceVariantLight)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Icon(
                 imageVector = icon,
@@ -547,12 +548,12 @@ private fun FeatureBadgeRow(
                 text = title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = AppTextPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = subtitle,
                 fontSize = 11.sp,
-                color = AppTextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

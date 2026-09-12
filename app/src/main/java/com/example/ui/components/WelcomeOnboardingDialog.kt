@@ -1,6 +1,7 @@
 package com.example.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,10 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.localization.LocalAppStrings
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnPrimaryBlue
 import com.example.ui.theme.VpnPrimaryBlueSoft
@@ -62,10 +60,11 @@ fun WelcomeOnboardingDialog(
     ) {
         Card(
             shape = RoundedCornerShape(26.dp),
-            colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+            colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth(0.92f)
                 .shadow(elevation = 18.dp, shape = RoundedCornerShape(26.dp))
+                .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outline, RoundedCornerShape(26.dp))
                 .testTag("welcome_onboarding_dialog")
         ) {
             Column(
@@ -86,7 +85,7 @@ fun WelcomeOnboardingDialog(
                     text = strings.onboardingTitle,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AppTextPrimary
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -95,7 +94,7 @@ fun WelcomeOnboardingDialog(
                 Text(
                     text = strings.onboardingSubtitle,
                     fontSize = 14.sp,
-                    color = AppTextSecondary,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     lineHeight = 20.sp
                 )
@@ -136,7 +135,7 @@ fun WelcomeOnboardingDialog(
                 Text(
                     text = strings.onboardingDisclaimer,
                     fontSize = 12.sp,
-                    color = AppTextSecondary,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
                 Text(
@@ -199,7 +198,7 @@ private fun OnboardingFeatureRow(
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(AppSurfaceVariantLight)
+                .background(androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Icon(
                 imageVector = icon,
@@ -216,12 +215,12 @@ private fun OnboardingFeatureRow(
                 text = title,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = AppTextPrimary
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = subtitle,
                 fontSize = 12.sp,
-                color = AppTextSecondary
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

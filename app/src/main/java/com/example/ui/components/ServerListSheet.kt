@@ -58,17 +58,11 @@ import com.example.localization.LocalAppLanguage
 import com.example.localization.LocalAppStrings
 import com.example.model.VpnServer
 import com.example.ui.ServerFilterCategory
-import com.example.ui.theme.CyberAmber
-import com.example.ui.theme.CyberBackground
-import com.example.ui.theme.CyberBorder
-import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.CyberEmerald
-import com.example.ui.theme.CyberRed
-import com.example.ui.theme.CyberSurface
-import com.example.ui.theme.CyberSurfaceVariant
-import com.example.ui.theme.TextMuted
-import com.example.ui.theme.TextPrimary
-import com.example.ui.theme.TextSecondary
+import com.example.ui.theme.ThemeColors
+import com.example.ui.theme.VpnAmber
+import com.example.ui.theme.VpnConnectedGreen
+import com.example.ui.theme.VpnDisconnectedRed
+import com.example.ui.theme.VpnPrimaryBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,7 +95,7 @@ fun ServerListSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = CyberBackground,
+        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
         dragHandle = {
             Box(
                 modifier = Modifier
@@ -109,7 +103,7 @@ fun ServerListSheet(
                     .width(44.dp)
                     .height(4.dp)
                     .clip(CircleShape)
-                    .background(CyberBorder)
+                    .background(androidx.compose.material3.MaterialTheme.colorScheme.outline)
             )
         },
         modifier = Modifier.fillMaxHeight(0.92f)
@@ -128,13 +122,13 @@ fun ServerListSheet(
                 Column {
                     Text(
                         text = strings.serversTitle,
-                        color = TextPrimary,
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = strings.serversSubtitle,
-                        color = CyberEmerald,
+                        color = VpnConnectedGreen,
                         fontSize = 12.sp
                     )
                 }
@@ -148,7 +142,7 @@ fun ServerListSheet(
                         Icon(
                             imageVector = Icons.Default.Refresh,
                             contentDescription = strings.refreshServers,
-                            tint = CyberCyan,
+                            tint = VpnPrimaryBlue,
                             modifier = Modifier.rotate(if (isLoading) rotation else 0f)
                         )
                     }
@@ -157,7 +151,7 @@ fun ServerListSheet(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = strings.closeBtn,
-                            tint = TextSecondary
+                            tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -169,12 +163,18 @@ fun ServerListSheet(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = onSearchChange,
-                placeholder = { Text(strings.searchPlaceholder, color = TextMuted, fontSize = 14.sp) },
+                placeholder = {
+                    Text(
+                        strings.searchPlaceholder,
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                        fontSize = 14.sp
+                    )
+                },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = null,
-                        tint = TextSecondary
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 },
                 trailingIcon = {
@@ -183,7 +183,7 @@ fun ServerListSheet(
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = strings.clearButton,
-                                tint = TextMuted
+                                tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -191,12 +191,12 @@ fun ServerListSheet(
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = CyberSurface,
-                    unfocusedContainerColor = CyberSurface,
-                    focusedBorderColor = CyberCyan,
-                    unfocusedBorderColor = CyberBorder,
-                    focusedTextColor = TextPrimary,
-                    unfocusedTextColor = TextPrimary
+                    focusedContainerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant,
+                    unfocusedContainerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant,
+                    focusedBorderColor = VpnPrimaryBlue,
+                    unfocusedBorderColor = androidx.compose.material3.MaterialTheme.colorScheme.outline,
+                    focusedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -209,14 +209,21 @@ fun ServerListSheet(
             TabRow(
                 selectedTabIndex = selectedCategory.ordinal,
                 containerColor = Color.Transparent,
-                contentColor = CyberCyan,
+                contentColor = VpnPrimaryBlue,
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
                         Modifier.tabIndicatorOffset(tabPositions[selectedCategory.ordinal]),
-                        color = CyberCyan
+                        color = VpnPrimaryBlue
                     )
                 },
-                divider = { Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(CyberBorder)) }
+                divider = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(androidx.compose.material3.MaterialTheme.colorScheme.outline)
+                    )
+                }
             ) {
                 Tab(
                     selected = selectedCategory == ServerFilterCategory.ALL,
@@ -273,7 +280,7 @@ fun ServerListSheet(
                         ) {
                             Text(
                                 text = if (selectedCategory == ServerFilterCategory.FAVORITES) strings.noFavoritesFound else strings.noServersFound,
-                                color = TextMuted,
+                                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 14.sp
                             )
                         }
@@ -308,9 +315,9 @@ private fun ServerListItem(
     onToggleFavorite: () -> Unit
 ) {
     val pingColor = when {
-        server.pingMs < 40 -> CyberEmerald
-        server.pingMs < 90 -> CyberAmber
-        else -> CyberRed
+        server.pingMs < 40 -> VpnConnectedGreen
+        server.pingMs < 90 -> VpnAmber
+        else -> VpnDisconnectedRed
     }
 
     Row(
@@ -319,10 +326,16 @@ private fun ServerListItem(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(if (isSelected) CyberSurfaceVariant else CyberSurface)
+            .background(
+                if (isSelected) {
+                    androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+                } else {
+                    androidx.compose.material3.MaterialTheme.colorScheme.surface
+                }
+            )
             .border(
-                width = 1.dp,
-                color = if (isSelected) CyberCyan else CyberBorder.copy(alpha = 0.6f),
+                width = if (isSelected) 1.5.dp else 1.dp,
+                color = if (isSelected) VpnPrimaryBlue else androidx.compose.material3.MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(14.dp)
             )
             .clickable(onClick = onSelect)
@@ -344,7 +357,7 @@ private fun ServerListItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = server.getDisplayName(isArabic, strings.optimalServer),
-                        color = TextPrimary,
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -353,10 +366,15 @@ private fun ServerListItem(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(CyberCyan.copy(alpha = 0.2f))
+                                .background(VpnPrimaryBlue.copy(alpha = 0.15f))
                                 .padding(horizontal = 5.dp, vertical = 1.dp)
                         ) {
-                            Text(strings.autoServerBadge, color = CyberCyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            Text(
+                                strings.autoServerBadge,
+                                color = VpnPrimaryBlue,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
@@ -365,7 +383,7 @@ private fun ServerListItem(
 
                 Text(
                     text = "${server.city} • ${server.ip}",
-                    color = TextSecondary,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 12.sp
                 )
             }
@@ -408,7 +426,7 @@ private fun ServerListItem(
                 Icon(
                     imageVector = if (server.isFavorite) Icons.Default.Star else Icons.Outlined.StarBorder,
                     contentDescription = strings.favoriteServerAction,
-                    tint = if (server.isFavorite) CyberAmber else TextMuted,
+                    tint = if (server.isFavorite) VpnAmber else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -418,7 +436,7 @@ private fun ServerListItem(
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = strings.selectedServerAction,
-                    tint = CyberCyan,
+                    tint = VpnPrimaryBlue,
                     modifier = Modifier.size(20.dp)
                 )
             }

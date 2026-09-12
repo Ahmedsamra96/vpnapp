@@ -5,50 +5,50 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import com.example.BuildConfig
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import java.util.Date
 
 /**
- * Manages Google AdMob Test Ads according to Google Play & AdMob Policies:
- * - Uses official Google AdMob Test IDs
- * - Ensures ads are never shown during active user inputs or critical VPN transitions without grace
- * - Handles Banner, Interstitial, and App Open Ad lifecycle cleanly
+ * Manages Google AdMob Ads for Ruvon VPN:
+ * - In DEBUG mode: All ads (Banner, Interstitial, AppOpen) are completely DISABLED.
+ *   No ads will load, no banners will show, providing a 100% clean debug experience.
+ * - In RELEASE mode: Real production AdMob Ad Unit IDs are used exclusively.
  */
 object AdMobManager : Application.ActivityLifecycleCallbacks {
 
     private const val TAG = "AdMobManager"
 
-    // Official Google AdMob Test Ad Unit IDs
-    private const val TEST_BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
-    private const val TEST_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
-    private const val TEST_APP_OPEN_AD_UNIT_ID = "ca-app-pub-3940256099942544/9257390708"
+    /**
+     * Set to false so that Debug APK has NO ads at all.
+     * Only Release builds will have ads enabled.
+     */
+    val areAdsEnabled: Boolean
+        get() = !BuildConfig.DEBUG
 
     // Real Production AdMob Ad Unit IDs from your AdMob Console
-    private const val PROD_BANNER_AD_UNIT_ID = "ca-app-pub-7820157448660134/6776380038"
-    private const val PROD_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7820157448660134/7878698394"
-    private const val PROD_APP_OPEN_AD_UNIT_ID = "ca-app-pub-7820157448660134/5252535056"
+    const val PROD_BANNER_AD_UNIT_ID = "ca-app-pub-7820157448660134/6776380038"
+    const val PROD_INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7820157448660134/7878698394"
+    const val PROD_APP_OPEN_AD_UNIT_ID = "ca-app-pub-7820157448660134/5252535056"
 
     /**
-     * Active Ad Unit IDs:
-     * - In DEBUG / Testing (during development & emulator), test IDs are used automatically to protect your AdMob account from policy violations.
-     * - In RELEASE (the build uploaded to Google Play), your real production AdMob IDs are used automatically.
+     * Banner Ad Unit ID: Real production ID in Release mode, empty in Debug.
      */
     val BANNER_AD_UNIT_ID: String
-        get() = if (com.example.BuildConfig.DEBUG) TEST_BANNER_AD_UNIT_ID else PROD_BANNER_AD_UNIT_ID
+        get() = if (areAdsEnabled) PROD_BANNER_AD_UNIT_ID else ""
 
     val INTERSTITIAL_AD_UNIT_ID: String
-        get() = if (com.example.BuildConfig.DEBUG) TEST_INTERSTITIAL_AD_UNIT_ID else PROD_INTERSTITIAL_AD_UNIT_ID
+        get() = if (areAdsEnabled) PROD_INTERSTITIAL_AD_UNIT_ID else ""
 
     val APP_OPEN_AD_UNIT_ID: String
-        get() = if (com.example.BuildConfig.DEBUG) TEST_APP_OPEN_AD_UNIT_ID else PROD_APP_OPEN_AD_UNIT_ID
+        get() = if (areAdsEnabled) PROD_APP_OPEN_AD_UNIT_ID else ""
 
     private var isInitialized = false
     private var currentActivity: Activity? = null
@@ -68,20 +68,15 @@ object AdMobManager : Application.ActivityLifecycleCallbacks {
     private var isShowingAppOpenAd = false
 
     fun initialize(application: Application) {
+        if (!areAdsEnabled) {
+            Log.d(TAG, "Debug build: Ads are completely disabled.")
+            return
+        }
         if (isInitialized) return
         application.registerActivityLifecycleCallbacks(this)
 
-        // Automatically register emulators and test devices to prevent any invalid traffic on real accounts
-        val testDeviceIds: List<String> = listOf(
-            AdRequest.DEVICE_ID_EMULATOR
-        )
-        val requestConfiguration = RequestConfiguration.Builder()
-            .setTestDeviceIds(testDeviceIds)
-            .build()
-        MobileAds.setRequestConfiguration(requestConfiguration)
-
         MobileAds.initialize(application) { initStatus ->
-            Log.d(TAG, "AdMob SDK Initialized: $initStatus")
+            Log.d(TAG, "AdMob SDK Initialized in Release: $initStatus")
             isInitialized = true
             loadInterstitialAd(application)
             loadAppOpenAd(application)
@@ -93,6 +88,7 @@ object AdMobManager : Application.ActivityLifecycleCallbacks {
     // =========================================================================
 
     fun loadInterstitialAd(context: Context) {
+        if (!areAdsEnabled) return
         if (interstitialAd != null || isInterstitialLoading) return
         isInterstitialLoading = true
 
@@ -105,7 +101,7 @@ object AdMobManager : Application.ActivityLifecycleCallbacks {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
                     isInterstitialLoading = false
-                    Log.d(TAG, "Interstitial Ad loaded successfully")
+                    Log.d(TAG, "Interstitial Ad loaded with unit: $INTERSTITIAL_AD_UNIT_ID")
 
                     ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                         override fun onAdDismissedFullScreenContent() {
@@ -133,40 +129,39 @@ object AdMobManager : Application.ActivityLifecycleCallbacks {
         )
     }
 
-    /**
-     * Show interstitial ad if loaded and cooldown has passed.
-     * Complies with AdMob policy: Never show unexpectedly or disruptively.
-     */
     fun showInterstitialIfReady(activity: Activity, onAdFinished: () -> Unit = {}) {
+        if (!areAdsEnabled) {
+            onAdFinished()
+            return
+        }
+
         val now = System.currentTimeMillis()
         if (now - lastInterstitialShownTime < INTERSTITIAL_COOLDOWN_MS) {
-            // Cooldown active, don't interrupt user
             onAdFinished()
             return
         }
 
         val ad = interstitialAd
         if (ad != null) {
+            val originalCallback = ad.fullScreenContentCallback
             ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
-                    interstitialAd = null
-                    loadInterstitialAd(activity.applicationContext)
+                    originalCallback?.onAdDismissedFullScreenContent()
                     onAdFinished()
                 }
 
                 override fun onAdFailedToShowFullScreenContent(error: AdError) {
-                    interstitialAd = null
-                    loadInterstitialAd(activity.applicationContext)
+                    originalCallback?.onAdFailedToShowFullScreenContent(error)
                     onAdFinished()
                 }
 
                 override fun onAdShowedFullScreenContent() {
-                    lastInterstitialShownTime = System.currentTimeMillis()
+                    originalCallback?.onAdShowedFullScreenContent()
                 }
             }
             ad.show(activity)
         } else {
-            loadInterstitialAd(activity.applicationContext)
+            loadInterstitialAd(activity)
             onAdFinished()
         }
     }
@@ -176,25 +171,44 @@ object AdMobManager : Application.ActivityLifecycleCallbacks {
     // =========================================================================
 
     fun loadAppOpenAd(context: Context) {
-        if (isAppOpenAdAvailable() || isAppOpenLoading) return
+        if (!areAdsEnabled) return
+        if (isAppOpenLoading || isAppOpenAdAvailable()) return
         isAppOpenLoading = true
 
-        val adRequest = AdRequest.Builder().build()
+        val request = AdRequest.Builder().build()
         AppOpenAd.load(
             context,
             APP_OPEN_AD_UNIT_ID,
-            adRequest,
+            request,
             object : AppOpenAd.AppOpenAdLoadCallback() {
                 override fun onAdLoaded(ad: AppOpenAd) {
                     appOpenAd = ad
                     isAppOpenLoading = false
                     loadTime = Date().time
-                    Log.d(TAG, "App Open Ad loaded successfully")
+                    Log.d(TAG, "App Open Ad loaded with unit: $APP_OPEN_AD_UNIT_ID")
+
+                    ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                        override fun onAdDismissedFullScreenContent() {
+                            appOpenAd = null
+                            isShowingAppOpenAd = false
+                            loadAppOpenAd(context)
+                        }
+
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                            appOpenAd = null
+                            isShowingAppOpenAd = false
+                            loadAppOpenAd(context)
+                        }
+
+                        override fun onAdShowedFullScreenContent() {
+                            isShowingAppOpenAd = true
+                        }
+                    }
                 }
 
                 override fun onAdFailedToLoad(loadError: LoadAdError) {
-                    appOpenAd = null
                     isAppOpenLoading = false
+                    appOpenAd = null
                     Log.w(TAG, "App Open Ad failed to load: ${loadError.message}")
                 }
             }
@@ -202,48 +216,51 @@ object AdMobManager : Application.ActivityLifecycleCallbacks {
     }
 
     private fun isAppOpenAdAvailable(): Boolean {
-        // App Open ad is considered valid for up to 4 hours per AdMob policy
-        val isNotExpired = (Date().time - loadTime) < 4 * 3600 * 1000
-        return appOpenAd != null && isNotExpired
+        if (!areAdsEnabled) return false
+        val wasLoadedRecently = (Date().time - loadTime) < 4 * 3600 * 1000 // 4 hours validity
+        return appOpenAd != null && wasLoadedRecently
     }
 
-    fun showAppOpenAdIfAvailable(activity: Activity, onComplete: () -> Unit = {}) {
+    fun showAppOpenAdIfAvailable(activity: Activity, onAdFinished: () -> Unit = {}) {
+        if (!areAdsEnabled) {
+            onAdFinished()
+            return
+        }
+
         if (isShowingAppOpenAd) {
-            onComplete()
+            onAdFinished()
             return
         }
 
         if (!isAppOpenAdAvailable()) {
-            loadAppOpenAd(activity.applicationContext)
-            onComplete()
+            loadAppOpenAd(activity)
+            onAdFinished()
             return
         }
 
-        appOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdDismissedFullScreenContent() {
-                appOpenAd = null
-                isShowingAppOpenAd = false
-                loadAppOpenAd(activity.applicationContext)
-                onComplete()
-            }
+        appOpenAd?.let { ad ->
+            val originalCallback = ad.fullScreenContentCallback
+            ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    originalCallback?.onAdDismissedFullScreenContent()
+                    onAdFinished()
+                }
 
-            override fun onAdFailedToShowFullScreenContent(error: AdError) {
-                appOpenAd = null
-                isShowingAppOpenAd = false
-                loadAppOpenAd(activity.applicationContext)
-                onComplete()
-            }
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    originalCallback?.onAdFailedToShowFullScreenContent(adError)
+                    onAdFinished()
+                }
 
-            override fun onAdShowedFullScreenContent() {
-                isShowingAppOpenAd = true
+                override fun onAdShowedFullScreenContent() {
+                    originalCallback?.onAdShowedFullScreenContent()
+                }
             }
-        }
-        isShowingAppOpenAd = true
-        appOpenAd?.show(activity)
+            ad.show(activity)
+        } ?: onAdFinished()
     }
 
     // =========================================================================
-    // ACTIVITY LIFECYCLE CALLBACKS
+    // Activity Lifecycle Callbacks
     // =========================================================================
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}

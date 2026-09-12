@@ -34,6 +34,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,17 +51,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.localization.LocalAppStrings
-import com.example.ui.theme.AppBgLight
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnAmber
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnConnectedGreenSoft
 import com.example.ui.theme.VpnDisconnectedRed
 import com.example.ui.theme.VpnPrimaryBlue
-import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun DataUsageDialog(
@@ -74,12 +70,12 @@ fun DataUsageDialog(
     ) {
         Surface(
             shape = RoundedCornerShape(24.dp),
-            color = AppBgLight,
+            color = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .fillMaxWidth(0.95f)
                 .fillMaxSize(0.92f)
                 .shadow(20.dp, RoundedCornerShape(24.dp))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(24.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(24.dp))
                 .testTag("data_usage_dialog")
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
@@ -89,7 +85,7 @@ fun DataUsageDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(AppSurfaceLight)
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(horizontal = 18.dp, vertical = 14.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -104,12 +100,12 @@ fun DataUsageDialog(
                                 text = strings.dataSafetyTitle,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = AppTextPrimary
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = strings.dataSafetySubtitle,
                                 fontSize = 12.sp,
-                                color = AppTextSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -121,12 +117,12 @@ fun DataUsageDialog(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = strings.closeBtn,
-                            tint = AppTextSecondary
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                HorizontalDivider(color = AppBorderLight)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                 // Scrollable Content
                 Column(
@@ -140,7 +136,7 @@ fun DataUsageDialog(
                         text = strings.dataSafetySummaryTitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = AppTextPrimary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -154,7 +150,7 @@ fun DataUsageDialog(
                             title = strings.dataCollectionTitle,
                             value = strings.dataCollectionValue,
                             color = VpnConnectedGreen,
-                            bgColor = VpnConnectedGreenSoft
+                            bgColor = VpnConnectedGreen.copy(alpha = 0.15f)
                         )
                         DataSafetySummaryCard(
                             modifier = Modifier.weight(1f),
@@ -162,7 +158,7 @@ fun DataUsageDialog(
                             title = strings.dataSharingTitle,
                             value = strings.dataSharingValue,
                             color = VpnConnectedGreen,
-                            bgColor = VpnConnectedGreenSoft
+                            bgColor = VpnConnectedGreen.copy(alpha = 0.15f)
                         )
                     }
 
@@ -177,8 +173,8 @@ fun DataUsageDialog(
                             icon = Icons.Default.Lock,
                             title = strings.dataTransitTitle,
                             value = strings.dataTransitValue,
-                            color = VpnPrimaryBlue,
-                            bgColor = VpnPrimaryBlueSoft
+                            color = MaterialTheme.colorScheme.primary,
+                            bgColor = ThemeColors.primarySoft
                         )
                         DataSafetySummaryCard(
                             modifier = Modifier.weight(1f),
@@ -186,7 +182,7 @@ fun DataUsageDialog(
                             title = strings.dataDeletionTitle,
                             value = strings.dataDeletionValue,
                             color = VpnAmber,
-                            bgColor = VpnAmber.copy(alpha = 0.12f)
+                            bgColor = VpnAmber.copy(alpha = 0.15f)
                         )
                     }
 
@@ -197,16 +193,16 @@ fun DataUsageDialog(
                         text = strings.dataCategoriesTitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = AppTextPrimary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Card(
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .border(1.dp, AppBorderLight, RoundedCornerShape(16.dp))
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                     ) {
                         Column(modifier = Modifier.padding(14.dp)) {
                             DataCategoryRow(
@@ -214,28 +210,28 @@ fun DataUsageDialog(
                                 status = strings.catLocationStatus,
                                 collected = false
                             )
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                             DataCategoryRow(
                                 title = strings.catPersonalTitle,
                                 status = strings.catPersonalStatus,
                                 collected = false
                             )
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                             DataCategoryRow(
                                 title = strings.catBrowsingTitle,
                                 status = strings.catBrowsingStatus,
                                 collected = false
                             )
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                             DataCategoryRow(
                                 title = strings.catDeviceTitle,
                                 status = strings.catDeviceStatus,
                                 collected = false
                             )
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                             DataCategoryRow(
                                 title = strings.catThroughputTitle,
@@ -253,16 +249,16 @@ fun DataUsageDialog(
                         text = strings.dataImpactTitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = AppTextPrimary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Card(
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .border(1.dp, AppBorderLight, RoundedCornerShape(16.dp))
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -271,12 +267,12 @@ fun DataUsageDialog(
                                     modifier = Modifier
                                         .size(32.dp)
                                         .clip(CircleShape)
-                                        .background(VpnPrimaryBlueSoft)
+                                        .background(ThemeColors.primarySoft)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.NetworkCheck,
                                         contentDescription = null,
-                                        tint = VpnPrimaryBlue,
+                                        tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.size(18.dp)
                                     )
                                 }
@@ -285,14 +281,14 @@ fun DataUsageDialog(
                                     text = strings.dataImpactTitle,
                                     fontSize = 13.5.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = AppTextPrimary
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = strings.dataImpactContent,
                                 fontSize = 12.sp,
-                                color = AppTextSecondary,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 lineHeight = 18.sp
                             )
                         }
@@ -303,17 +299,17 @@ fun DataUsageDialog(
 
                 // Bottom button
                 Surface(
-                    color = AppSurfaceLight,
+                    color = MaterialTheme.colorScheme.surface,
                     tonalElevation = 4.dp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, AppBorderLight)
+                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                         .padding(16.dp)
                 ) {
                     Button(
                         onClick = onDismiss,
                         shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = VpnPrimaryBlue),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp)
@@ -342,8 +338,8 @@ private fun DataSafetySummaryCard(
 ) {
     Card(
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = AppSurfaceLight),
-        modifier = modifier.border(1.dp, AppBorderLight, RoundedCornerShape(14.dp))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        modifier = modifier.border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Box(
@@ -364,14 +360,14 @@ private fun DataSafetySummaryCard(
             Text(
                 text = title,
                 fontSize = 11.5.sp,
-                color = AppTextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = value,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
-                color = AppTextPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -394,12 +390,12 @@ private fun DataCategoryRow(
                 text = title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = AppTextPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = status,
                 fontSize = 11.5.sp,
-                color = if (collected) VpnDisconnectedRed else if (isInfo) VpnPrimaryBlue else VpnConnectedGreen
+                color = if (collected) VpnDisconnectedRed else if (isInfo) MaterialTheme.colorScheme.primary else VpnConnectedGreen
             )
         }
 
@@ -410,14 +406,14 @@ private fun DataCategoryRow(
                 .clip(CircleShape)
                 .background(
                     if (collected) VpnDisconnectedRed.copy(alpha = 0.1f)
-                    else if (isInfo) VpnPrimaryBlueSoft
-                    else VpnConnectedGreenSoft
+                    else if (isInfo) ThemeColors.primarySoft
+                    else VpnConnectedGreen.copy(alpha = 0.15f)
                 )
         ) {
             Icon(
                 imageVector = if (collected) Icons.Default.Close else if (isInfo) Icons.Default.Info else Icons.Default.Check,
                 contentDescription = null,
-                tint = if (collected) VpnDisconnectedRed else if (isInfo) VpnPrimaryBlue else VpnConnectedGreen,
+                tint = if (collected) VpnDisconnectedRed else if (isInfo) MaterialTheme.colorScheme.primary else VpnConnectedGreen,
                 modifier = Modifier.size(14.dp)
             )
         }

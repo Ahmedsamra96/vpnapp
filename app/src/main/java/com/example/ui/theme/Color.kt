@@ -1,5 +1,6 @@
 package com.example.ui.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // Modern Light & Clean Palette (Matches Design Reference)
@@ -33,6 +34,43 @@ val AppSurfaceVariantDark = Color(0xFF1E293B)
 val AppBorderDark = Color(0xFF22324E)
 val AppTextPrimaryDark = Color(0xFFF8FAFC)
 val AppTextSecondaryDark = Color(0xFF94A3B8)
+val AppTextMutedDark = Color(0xFF64748B)
+
+// Helpers to get adaptive colors within Composables
+object ThemeColors {
+    val surface: Color
+        @Composable get() = androidx.compose.material3.MaterialTheme.colorScheme.surface
+
+    val surfaceVariant: Color
+        @Composable get() = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+
+    val background: Color
+        @Composable get() = androidx.compose.material3.MaterialTheme.colorScheme.background
+
+    val textPrimary: Color
+        @Composable get() = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+
+    val textSecondary: Color
+        @Composable get() = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+
+    val outline: Color
+        @Composable get() = androidx.compose.material3.MaterialTheme.colorScheme.outline
+
+    val isDark: Boolean
+        @Composable get() = androidx.compose.material3.MaterialTheme.colorScheme.background == AppBgDark
+
+    val primarySoft: Color
+        @Composable get() = if (isDark) Color(0xFF1E293B) else VpnPrimaryBlueSoft
+
+    val primarySoftBorder: Color
+        @Composable get() = if (isDark) Color(0xFF1E3A8A) else Color(0xFFBFDBFE)
+
+    val cardBg: Color
+        @Composable get() = if (isDark) AppSurfaceDark else Color(0xFFFFFFFF)
+
+    val innerCardBg: Color
+        @Composable get() = if (isDark) AppSurfaceVariantDark else Color(0xFFF8FAFC)
+}
 
 // Backward-compatible aliases for existing components
 val CyberCyan = VpnPrimaryBlue

@@ -59,13 +59,6 @@ import androidx.compose.ui.unit.sp
 import com.example.localization.AppLanguage
 import com.example.localization.LocalAppStrings
 import com.example.ui.VpnViewModel
-import com.example.ui.theme.AppBgLight
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
-import com.example.ui.theme.AppTextMuted
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
 import com.example.ui.theme.VpnPrimaryBlue
 
 @Composable

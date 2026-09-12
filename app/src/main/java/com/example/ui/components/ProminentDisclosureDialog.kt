@@ -31,6 +31,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,17 +50,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.localization.LocalAppStrings
-import com.example.ui.theme.AppBgLight
-import com.example.ui.theme.AppBorderLight
-import com.example.ui.theme.AppSurfaceLight
-import com.example.ui.theme.AppSurfaceVariantLight
-import com.example.ui.theme.AppTextMuted
-import com.example.ui.theme.AppTextPrimary
-import com.example.ui.theme.AppTextSecondary
+import com.example.ui.theme.ThemeColors
 import com.example.ui.theme.VpnConnectedGreen
 import com.example.ui.theme.VpnPrimaryBlue
-import com.example.ui.theme.VpnPrimaryBlueDark
-import com.example.ui.theme.VpnPrimaryBlueSoft
 
 @Composable
 fun ProminentDisclosureDialog(
@@ -76,11 +69,11 @@ fun ProminentDisclosureDialog(
     ) {
         Surface(
             shape = RoundedCornerShape(26.dp),
-            color = AppSurfaceLight,
+            color = MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .fillMaxWidth(0.92f)
                 .shadow(24.dp, RoundedCornerShape(26.dp))
-                .border(1.dp, AppBorderLight, RoundedCornerShape(26.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(26.dp))
                 .testTag("prominent_disclosure_dialog")
         ) {
             Column(
@@ -104,7 +97,7 @@ fun ProminentDisclosureDialog(
                     text = strings.disclosureTitle,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AppTextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -114,7 +107,7 @@ fun ProminentDisclosureDialog(
                 Text(
                     text = strings.disclosureSubtitle,
                     fontSize = 12.5.sp,
-                    color = AppTextSecondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     lineHeight = 18.sp,
                     modifier = Modifier.fillMaxWidth()
@@ -125,10 +118,10 @@ fun ProminentDisclosureDialog(
                 // Mandatory Disclosure Points
                 Card(
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = AppBgLight),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, AppBorderLight, RoundedCornerShape(16.dp))
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
                         DisclosurePoint(
@@ -137,7 +130,7 @@ fun ProminentDisclosureDialog(
                             description = strings.disclosurePoint1Desc
                         )
 
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                         DisclosurePoint(
                             icon = Icons.Default.GppGood,
@@ -145,7 +138,7 @@ fun ProminentDisclosureDialog(
                             description = strings.disclosurePoint2Desc
                         )
 
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = AppBorderLight)
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
 
                         DisclosurePoint(
                             icon = Icons.Default.Speed,
@@ -166,7 +159,7 @@ fun ProminentDisclosureDialog(
                         text = "📜 ${strings.privacyPolicyTitle}",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = VpnPrimaryBlue,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .clickable(onClick = onViewPrivacyPolicy)
                             .padding(vertical = 4.dp)
@@ -176,7 +169,7 @@ fun ProminentDisclosureDialog(
                         text = "🛡️ ${strings.dataSafetyTitle}",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = VpnPrimaryBlue,
+                        color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .clickable(onClick = onViewDataSafety)
                             .padding(vertical = 4.dp)
@@ -189,7 +182,7 @@ fun ProminentDisclosureDialog(
                 Button(
                     onClick = onAccept,
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = VpnPrimaryBlue),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -223,7 +216,7 @@ fun ProminentDisclosureDialog(
                     Text(
                         text = strings.cancelBtn,
                         fontSize = 14.sp,
-                        color = AppTextSecondary
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -243,12 +236,12 @@ private fun DisclosurePoint(
             modifier = Modifier
                 .size(32.dp)
                 .clip(CircleShape)
-                .background(VpnPrimaryBlueSoft)
+                .background(ThemeColors.primarySoft)
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = VpnPrimaryBlue,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(17.dp)
             )
         }
@@ -258,13 +251,13 @@ private fun DisclosurePoint(
                 text = title,
                 fontSize = 13.5.sp,
                 fontWeight = FontWeight.Bold,
-                color = AppTextPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = description,
                 fontSize = 11.5.sp,
-                color = AppTextSecondary,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 17.sp
             )
         }
