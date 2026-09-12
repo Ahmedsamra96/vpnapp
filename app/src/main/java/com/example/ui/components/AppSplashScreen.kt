@@ -70,7 +70,6 @@ fun AppSplashScreen(
     val alpha = remember { Animatable(0f) }
     val textAlpha = remember { Animatable(0f) }
 
-    // Pulsing shield aura animation
     val infiniteTransition = rememberInfiniteTransition(label = "splash_pulse")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1.0f,
@@ -92,7 +91,6 @@ fun AppSplashScreen(
     )
 
     LaunchedEffect(Unit) {
-        // Run staggered animations
         scale.animateTo(
             targetValue = 1.0f,
             animationSpec = tween(750, easing = FastOutSlowInEasing)
@@ -105,7 +103,6 @@ fun AppSplashScreen(
             targetValue = 1.0f,
             animationSpec = tween(600, easing = FastOutSlowInEasing)
         )
-        // Keep on screen briefly for smooth branding feel
         delay(1400)
         onSplashFinished()
     }
@@ -135,7 +132,6 @@ fun AppSplashScreen(
             .testTag("app_splash_screen"),
         contentAlignment = Alignment.Center
     ) {
-        // Decorative background subtle light orb
         Box(
             modifier = Modifier
                 .size(320.dp)
@@ -161,19 +157,17 @@ fun AppSplashScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp)
         ) {
-            // Original supplied icon; only the outer corners are rounded.
             Image(
                 painter = painterResource(id = R.drawable.ic_ruvon_app),
                 contentDescription = "Ruvon VPN Icon",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(130.dp)
-                    .clip(RoundedCornerShape(percent = 22))
+                    .clip(RoundedCornerShape(percent = 30))
             )
 
             Spacer(modifier = Modifier.height(28.dp))
 
-            // App Brand Name with smooth fade-in
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.alpha(textAlpha.value)
@@ -198,7 +192,6 @@ fun AppSplashScreen(
             }
         }
 
-        // Bottom Animated Dots / Status
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -224,7 +217,7 @@ fun AppSplashScreen(
 @Composable
 private fun AnimatedLoadingDots() {
     val infiniteTransition = rememberInfiniteTransition(label = "dots_transition")
-    
+
     val dot1Alpha by infiniteTransition.animateFloat(
         initialValue = 0.25f,
         targetValue = 1.0f,
