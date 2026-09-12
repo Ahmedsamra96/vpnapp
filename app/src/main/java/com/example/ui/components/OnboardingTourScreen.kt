@@ -60,7 +60,6 @@ fun OnboardingTourScreen(
 ) {
     val strings = LocalAppStrings.current
 
-    // Dark Mode Theme Palette
     val bgGradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFF070E24),
@@ -90,24 +89,21 @@ fun OnboardingTourScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Center Content Block
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Original supplied icon; only the outer corners are rounded.
                 Image(
                     painter = painterResource(id = R.drawable.ic_ruvon_app),
                     contentDescription = "Ruvon VPN Icon",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(116.dp)
-                        .clip(RoundedCornerShape(percent = 22))
+                        .clip(RoundedCornerShape(percent = 30))
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // App Title
                 Text(
                     text = strings.appTitle,
                     fontSize = 28.sp,
@@ -118,7 +114,6 @@ fun OnboardingTourScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Subtitle
                 Text(
                     text = strings.onboardingSubtitle,
                     fontSize = 14.sp,
@@ -130,12 +125,10 @@ fun OnboardingTourScreen(
 
                 Spacer(modifier = Modifier.height(28.dp))
 
-                // Feature List (Cards in dark mode)
                 Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Feature 1: Free access
                     DarkTourFeatureRow(
                         icon = Icons.Default.Bolt,
                         iconTint = Color(0xFF60A5FA),
@@ -147,7 +140,6 @@ fun OnboardingTourScreen(
                         subTextColor = textSecondary
                     )
 
-                    // Feature 2: No registration
                     DarkTourFeatureRow(
                         icon = Icons.Default.Person,
                         iconTint = Color(0xFF38BDF8),
@@ -159,7 +151,6 @@ fun OnboardingTourScreen(
                         subTextColor = textSecondary
                     )
 
-                    // Feature 3: Secure connection
                     DarkTourFeatureRow(
                         icon = Icons.Default.Lock,
                         iconTint = Color(0xFF60A5FA),
@@ -173,12 +164,10 @@ fun OnboardingTourScreen(
                 }
             }
 
-            // Bottom Section: Continue Button + 3 Pagination Dots
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Vibrant Blue Continue Button
                 Button(
                     onClick = onContinue,
                     shape = RoundedCornerShape(20.dp),
@@ -210,7 +199,6 @@ fun OnboardingTourScreen(
 
                 Spacer(modifier = Modifier.height(18.dp))
 
-                // 3 Pagination Indicator Dots (Active on first dot)
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically
